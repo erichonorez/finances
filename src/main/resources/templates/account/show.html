@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="fragments/head"></head>
+<body>
+<h1 th:text="${account.description}"></h1>
+<a th:href="@{'/accounts/'+ ${account.accountId.id} +'/edit'}">Edit</a>
+<p>Actual balance: <span th:text="${account.getBalance()}"></span></p>
+<h2>Transactions <a th:href="@{'/accounts/' + ${account.accountId.id} + '/transactions/new'}" class="btn btn-success">Add</a></h2>
+<table class="table table-over">
+    <thead>
+        <tr>
+            <th>Description</th>
+            <th>Date</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="transaction : ${account.getTransactions()}">
+            <td th:text="${{transaction.description}}"></td>
+            <td th:text="${{transaction.date}}"></td>
+            <td th:text="${{transaction.value()}}"></td>
+        </tr>
+    </tbody>
+</table>
+</body>
+</html>

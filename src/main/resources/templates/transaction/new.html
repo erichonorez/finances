@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="fragments/head"></head>
+<body>
+<h1>New transaction</h1>
+
+<form method="post" th:action="@{'/accounts/' + ${account.accountId.id} + '/transactions/create' }" th:object="${transactionForm}">
+
+    <div class="form-group" th:classappend="${#fields.hasErrors('type')} ? has-error">
+        <div class="radio" th:each="transactionType : ${T(org.svomz.apps.finances.ports.adapters.web.controllers.TransactionType).values()}">
+            <label>
+                <input type="radio" th:id="${{transactionType}}" th:value="${{transactionType}}" th:field="*{type}" />
+                <span th:text="${{transactionType}}"></span>
+            </label>
+        </div>
+
+        <ul th:if="${#fields.hasErrors('type')}" class="has-error">
+            <li th:each="err : ${#fields.errors('type')}" th:text="${err}" />
+        </ul>
+    </div>
+
+    <div class="form-group" th:classappend="${#fields.hasErrors('description')} ? has-error">
+        <label for="description" class="control-label">Description</label>
+        <input type="text" class="form-control" id="description" name="description" placeholder="Description"
+               th:value="*{description}" />
+        <ul th:if="${#fields.hasErrors('description')}" class="has-error">
+            <li th:each="err : ${#fields.errors('description')}" th:text="${err}" />
+        </ul>
+    </div>
+
+    <div class="form-group" th:classappend="${#fields.hasErrors('amount')} ? has-error">
+        <label for="description" class="control-label">Amount</label>
+        <input type="number" class="form-control" id="amount" name="amount" placeholder="Amount"
+               th:value="*{amount}" />
+        <ul th:if="${#fields.hasErrors('amount')}" class="has-error">
+            <li th:each="err : ${#fields.errors('amount')}" th:text="${err}" />
+        </ul>
+    </div>
+
+    <div class="form-group" th:classappend="${#fields.hasErrors('date')} ? has-error">
+        <label for="date" class="control-label">Date</label>
+        <input type="text" class="form-control" id="date" name="date" placeholder="Date"
+               th:value="*{date}" />
+        <ul th:if="${#fields.hasErrors('date')}" class="has-error">
+            <li th:each="err : ${#fields.errors('date')}" th:text="${err}" />
+        </ul>
+    </div>
+
+
+    <a class="btn btn-default"  th:href="${referer}">Cancel</a>
+    <button type="submit" class="btn btn-primary">Save</button>
+
+</form>
+
+</body>
+</html>
