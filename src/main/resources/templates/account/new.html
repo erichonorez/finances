@@ -1,24 +1,27 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-    <head th:replace="fragments/head"></head>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorator="layout">
+    <head>
+        <title>New</title>
+    </head>
     <body>
-        <h1>New account</h1>
+        <div layout:fragment="content">
+            <h2>New account</h2>
 
-        <form method="post" th:action="@{/accounts}" th:object="${accountForm}">
+            <form method="post" th:action="@{/accounts}" th:object="${accountForm}">
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('description')} ? has-error">
-                <label for="description" class="control-label">Account description</label>
-                <input type="text" class="form-control" id="description" name="description" placeholder="Description"
-                       th:value="*{description}" />
-                <ul th:if="${#fields.hasErrors('description')}" class="has-error">
-                    <li th:each="err : ${#fields.errors('description')}" th:text="${err}" />
-                </ul>
-            </div>
+                <div class="form-group" th:classappend="${#fields.hasErrors('description')} ? has-error">
+                    <label for="description" class="control-label">Account description</label>
+                    <input type="text" class="form-control" id="description" name="description" placeholder="Description"
+                           th:value="*{description}" />
+                    <ul th:if="${#fields.hasErrors('description')}" class="has-error">
+                        <li th:each="err : ${#fields.errors('description')}" th:text="${err}" />
+                    </ul>
+                </div>
 
-            <a class="btn btn-default"  th:href="${referer}">Cancel</a>
-            <button type="submit" class="btn btn-primary">Save</button>
+                <a class="btn btn-default"  th:href="${referer}">Cancel</a>
+                <button type="submit" class="btn btn-primary">Save</button>
 
-        </form>
-
+            </form>
+        </div>
     </body>
 </html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
+    <head th:fragment="head">
+        <meta charset="UTF-8" />
+        <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet" />
+        <title layout:title-pattern="$DECORATOR_TITLE - $CONTENT_TITLE">Finances</title>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Finances</h1>
+            <div layout:fragment="content">
+                Content
+            </div>
+        </div>
+    </body>
+</html>
