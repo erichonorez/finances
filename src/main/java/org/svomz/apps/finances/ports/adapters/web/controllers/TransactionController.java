@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.svomz.apps.finances.application.AccountNotFoundException;
@@ -33,10 +34,11 @@ public class TransactionController {
   }
 
   @RequestMapping(path = "/new", method = RequestMethod.GET)
-  public String newTransaction(@PathVariable final String accountId, final TransactionForm transactionForm, final Model model)
+  public String newTransaction(@RequestHeader(value = "referer", required = false) final String referer, @PathVariable final String accountId, final TransactionForm transactionForm, final Model model)
     throws AccountNotFoundException {
     Account account = this.accountService.getAccount(accountId);
     model.addAttribute("account", account);
+    model.addAttribute("referer", referer);
     return "transaction/new";
   }
 
