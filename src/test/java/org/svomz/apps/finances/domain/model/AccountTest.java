@@ -1,4 +1,4 @@
-package org.svomz.apps.finances.domain;
+package org.svomz.apps.finances.domain.model;
 
 import org.junit.Test;
 
@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.svomz.apps.finances.domain.Builders.an;
+import static org.svomz.apps.finances.domain.model.Builders.an;
 
 /**
  * Created by eric on 28/02/16.
@@ -23,7 +23,7 @@ public class AccountTest {
   @Test
   public void itShouldUpdateBalanceWhenExpenseIsAdded() {
     Account account = new Account("An account name");
-    account.add(an(Expense.of(5)
+    account.add(Builders.an(Expense.of(5)
       .on(LocalDateTime.of(2015, 10, 21, 10, 2))
       .withDescription("A description")));
 
@@ -57,7 +57,7 @@ public class AccountTest {
       .withDescription("A description"));
     account.add(secondIncome);
 
-    Expense firstExpense = an(Expense.of(8)
+    Expense firstExpense = Builders.an(Expense.of(8)
       .on(LocalDateTime.of(2015, 10, 21, 10, 2))
       .withDescription("A description"));
     account.add(firstExpense);

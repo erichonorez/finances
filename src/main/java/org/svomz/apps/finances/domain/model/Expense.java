@@ -1,4 +1,4 @@
-package org.svomz.apps.finances.domain;
+package org.svomz.apps.finances.domain.model;
 
 import com.google.common.base.Preconditions;
 

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.svomz.apps.finances.application.AccountNotFoundException;
 import org.svomz.apps.finances.application.AccountService;
-import org.svomz.apps.finances.domain.Account;
+import org.svomz.apps.finances.domain.model.Account;
 
 import java.util.Set;
 

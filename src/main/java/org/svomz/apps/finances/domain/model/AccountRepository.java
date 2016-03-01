@@ -1,4 +1,4 @@
-package org.svomz.apps.finances.domain;
+package org.svomz.apps.finances.domain.model;
 
 import java.util.Optional;
 import java.util.Set;

@@ -1,7 +1,7 @@
 package org.svomz.apps.finances.application;
 
 import org.junit.Test;
-import org.svomz.apps.finances.domain.Account;
+import org.svomz.apps.finances.domain.model.Account;
 import org.svomz.apps.finances.ports.adapters.persistence.InMemoryAccountRepository;
 
 import java.math.BigDecimal;

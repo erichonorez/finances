@@ -1,9 +1,9 @@
 package org.svomz.apps.finances.ports.adapters.persistence;
 
 import org.springframework.stereotype.Component;
-import org.svomz.apps.finances.domain.Account;
-import org.svomz.apps.finances.domain.AccountId;
-import org.svomz.apps.finances.domain.AccountRepository;
+import org.svomz.apps.finances.domain.model.Account;
+import org.svomz.apps.finances.domain.model.AccountId;
+import org.svomz.apps.finances.domain.model.AccountRepository;
 
 import java.util.Collections;
 import java.util.HashSet;

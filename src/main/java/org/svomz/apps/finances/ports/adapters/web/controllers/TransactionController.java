@@ -11,7 +11,7 @@ import org.svomz.apps.finances.application.AccountNotFoundException;
 import org.svomz.apps.finances.application.AccountService;
 import org.svomz.apps.finances.application.AddExpenseCommand;
 import org.svomz.apps.finances.application.AddIncomeCommand;
-import org.svomz.apps.finances.domain.Account;
+import org.svomz.apps.finances.domain.model.Account;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;

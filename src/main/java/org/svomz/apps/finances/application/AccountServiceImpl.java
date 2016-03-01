@@ -3,12 +3,12 @@ package org.svomz.apps.finances.application;
 import com.google.common.base.Preconditions;
 
 import org.springframework.stereotype.Component;
-import org.svomz.apps.finances.domain.Account;
-import org.svomz.apps.finances.domain.AccountId;
-import org.svomz.apps.finances.domain.AccountRepository;
-import org.svomz.apps.finances.domain.Expense;
-import org.svomz.apps.finances.domain.Income;
-import org.svomz.apps.finances.domain.Transaction;
+import org.svomz.apps.finances.domain.model.Account;
+import org.svomz.apps.finances.domain.model.AccountId;
+import org.svomz.apps.finances.domain.model.AccountRepository;
+import org.svomz.apps.finances.domain.model.Expense;
+import org.svomz.apps.finances.domain.model.Income;
+import org.svomz.apps.finances.domain.model.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;

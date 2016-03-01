@@ -1,12 +1,10 @@
 package org.svomz.apps.finances.application;
 
-import org.svomz.apps.finances.domain.Account;
-import org.svomz.apps.finances.domain.Transaction;
+import org.svomz.apps.finances.domain.model.Account;
+import org.svomz.apps.finances.domain.model.Transaction;
 
 import java.util.List;
 import java.util.Set;
-
-import javax.transaction.Transactional;
 
 /**
  * Created by eric on 28/02/16.

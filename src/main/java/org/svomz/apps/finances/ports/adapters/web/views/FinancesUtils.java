@@ -2,8 +2,8 @@ package org.svomz.apps.finances.ports.adapters.web.views;
 
 import com.google.common.base.Preconditions;
 
-import org.svomz.apps.finances.domain.Expense;
-import org.svomz.apps.finances.domain.Transaction;
+import org.svomz.apps.finances.domain.model.Expense;
+import org.svomz.apps.finances.domain.model.Transaction;
 
 import java.math.BigDecimal;
 

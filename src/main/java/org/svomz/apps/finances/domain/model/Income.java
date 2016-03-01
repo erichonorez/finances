@@ -1,9 +1,8 @@
-package org.svomz.apps.finances.domain;
+package org.svomz.apps.finances.domain.model;
 
 import com.google.common.base.Preconditions;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * Created by eric on 28/02/16.
