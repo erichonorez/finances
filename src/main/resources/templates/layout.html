@@ -3,13 +3,14 @@
     <head th:fragment="head">
         <meta charset="UTF-8" />
         <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet" />
+        <link th:href="@{/css/finances.css}" rel="stylesheet" />
         <title layout:title-pattern="$DECORATOR_TITLE - $CONTENT_TITLE">Finances</title>
     </head>
     <body>
         <nav class="navbar navbar-default navbar-static-top">
             <div class="container">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="#">Finances</a>
+                    <a class="navbar-brand" href="/">Finances</a>
                 </div>
             </div>
         </nav>

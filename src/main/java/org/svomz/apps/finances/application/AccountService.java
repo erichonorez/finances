@@ -13,15 +13,12 @@ import javax.transaction.Transactional;
  */
 public interface AccountService {
 
-  @Transactional
   Account createAccount(String description);
 
   Set<Account> getAllAccounts();
 
-  @Transactional
   void execute(AddIncomeCommand command) throws AccountNotFoundException;
 
-  @Transactional
   void execute(AddExpenseCommand command) throws AccountNotFoundException;
 
   List<Transaction> getTransactions(String accountId, int page, int size)
