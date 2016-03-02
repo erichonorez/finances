@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
+
 /**
  * Created by eric on 28/02/16.
  */
@@ -16,7 +18,7 @@ public class Account {
   private String description;
   private AccountId id;
 
-  public Account(final AccountId accountId, final String description) {
+  public Account(@Nullable final AccountId accountId, final String description) {
     this.id = accountId;
     this.description = Preconditions.checkNotNull(description);
     this.transactions = new ArrayList<Transaction>();
