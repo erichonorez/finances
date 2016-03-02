@@ -24,7 +24,7 @@ public class AccountTest {
   public void itShouldUpdateBalanceWhenExpenseIsAdded() {
     Account account = new Account("An account name");
     account.add(Builders.an(Expense.of(5)
-      .on(LocalDateTime.of(2015, 10, 21, 10, 2))
+      .occuredOn(LocalDateTime.of(2015, 10, 21, 10, 2))
       .withDescription("A description")));
 
     assertThat(account.getBalance())
@@ -35,7 +35,7 @@ public class AccountTest {
   public void itShouldUpdateBalanceWhenIncomeIsAdded() {
     Account account = new Account("An account name");
     account.add(an(Income.of(5)
-      .on(LocalDateTime.of(2015, 10, 21, 10, 2))
+      .occuredOn(LocalDateTime.of(2015, 10, 21, 10, 2))
       .withDescription("An income"))
     );
 
@@ -48,17 +48,17 @@ public class AccountTest {
     Account account = new Account("An account name");
 
     Income firstIncome = an(Income.of(10)
-      .on(LocalDateTime.of(2015, 10, 21, 10, 2))
+      .occuredOn(LocalDateTime.of(2015, 10, 21, 10, 2))
       .withDescription("A description"));
     account.add(firstIncome);
 
     Income secondIncome = an(Income.of(5)
-      .on(LocalDateTime.of(2015, 10, 21, 10, 2))
+      .occuredOn(LocalDateTime.of(2015, 10, 21, 10, 2))
       .withDescription("A description"));
     account.add(secondIncome);
 
     Expense firstExpense = Builders.an(Expense.of(8)
-      .on(LocalDateTime.of(2015, 10, 21, 10, 2))
+      .occuredOn(LocalDateTime.of(2015, 10, 21, 10, 2))
       .withDescription("A description"));
     account.add(firstExpense);
 
@@ -71,17 +71,17 @@ public class AccountTest {
     Account account = new Account("An account name");
 
     Income lastIncome = an(Income.of(5)
-      .on(LocalDateTime.of(2015, 10, 21, 10, 2))
+      .occuredOn(LocalDateTime.of(2015, 10, 21, 10, 2))
       .withDescription("A description"));
     account.add(lastIncome);
 
     Income secondIncome = an(Income.of(5)
-      .on(LocalDateTime.of(2015, 10, 21, 10, 1))
+      .occuredOn(LocalDateTime.of(2015, 10, 21, 10, 1))
       .withDescription("A description"));
     account.add(secondIncome);
 
     Income firstIncome = an(Income.of(5)
-      .on(LocalDateTime.of(2015, 10, 21, 10, 0))
+      .occuredOn(LocalDateTime.of(2015, 10, 21, 10, 0))
       .withDescription("A description"));
     account.add(firstIncome);
 
@@ -97,22 +97,22 @@ public class AccountTest {
     Account account = new Account("An account name");
 
     Income lastIncome = an(Income.of(5)
-      .on(LocalDateTime.of(2015, 10, 21, 10, 2))
+      .occuredOn(LocalDateTime.of(2015, 10, 21, 10, 2))
       .withDescription("A description"));
     account.add(lastIncome);
 
     Income secondIncome = an(Income.of(5)
-      .on(LocalDateTime.of(2015, 10, 21, 10, 1))
+      .occuredOn(LocalDateTime.of(2015, 10, 21, 10, 1))
       .withDescription("A description"));
     account.add(secondIncome);
 
     Income firstIncome = an(Income.of(5)
-      .on(LocalDateTime.of(2015, 10, 21, 10, 0))
+      .occuredOn(LocalDateTime.of(2015, 10, 21, 10, 0))
       .withDescription("A description"));
     account.add(firstIncome);
 
     Income addedDirectly = an(Income.of(5)
-      .on(LocalDateTime.of(2015, 10, 21, 10, 0))
+      .occuredOn(LocalDateTime.of(2015, 10, 21, 10, 0))
       .withDescription("A description"));
     account.getTransactions().add(firstIncome);
 

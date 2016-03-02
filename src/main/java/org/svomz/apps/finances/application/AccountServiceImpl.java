@@ -52,7 +52,7 @@ public class AccountServiceImpl implements AccountService {
     Account account = this.getAccount(command.getAccountId());
 
     account.add(Income.of(command.getValue())
-      .on(command.getDateTime())
+      .occuredOn(command.getDateTime())
       .withDescription(command.getDescription())
       .build());
   }
@@ -65,7 +65,7 @@ public class AccountServiceImpl implements AccountService {
     Account account = this.getAccount(command.getAccountId());
 
     account.add(Expense.of(command.getValue())
-      .on(command.getDateTime())
+      .occuredOn(command.getDateTime())
       .withDescription(command.getDescription())
       .build());
   }

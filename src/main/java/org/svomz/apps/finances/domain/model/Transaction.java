@@ -49,7 +49,7 @@ public abstract class Transaction {
       return (BUILDER) this;
     }
 
-    public BUILDER on(final LocalDateTime date) {
+    public BUILDER occuredOn(final LocalDateTime date) {
       Preconditions.checkNotNull(date);
       this.date = date;
       return (BUILDER) this;
