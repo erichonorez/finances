@@ -1,11 +1,11 @@
 package org.svomz.apps.finances.ports.adapters.web.controllers;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -26,6 +26,8 @@ public class TransactionForm {
   private TransactionType type;
 
   @NotNull
+  @Digits(integer = 10, fraction = 2)
+  @Min(0)
   private Double amount;
 
   public String getDescription() {
