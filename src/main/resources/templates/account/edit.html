@@ -7,20 +7,8 @@
         <div layout:fragment="content">
             <h2>Edit account</h2>
 
-            <form method="post" th:action="@{'/accounts/'+ ${accountId} +'/update'}" th:object="${accountForm}">
-
-                <div class="form-group" th:classappend="${#fields.hasErrors('description')} ? has-error">
-                    <label for="description" class="control-label">Account description</label>
-                    <input type="text" class="form-control" id="description" name="description" placeholder="Description"
-                           th:value="*{description}" />
-                    <ul th:if="${#fields.hasErrors('description')}" class="has-error">
-                        <li th:each="err : ${#fields.errors('description')}" th:text="${err}" />
-                    </ul>
-                </div>
-
-                <a class="btn btn-default" th:href="${referer}">Cancel</a>
-                <button type="submit" class="btn btn-success">Save</button>
-
+            <form method="post" th:action="@{'/accounts/'+ ${accountId} +'/update'}" th:object="${accountForm}"
+                  th:include="account/partials/form :: content">
             </form>
         </div>
     </body>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorator="layout">
+<head></head>
+<body>
+
+<div th:fragment="content">
+
+    <div class="form-group" th:classappend="${#fields.hasErrors('description')} ? has-error">
+        <label for="description" class="control-label">Account description</label>
+        <input type="text" class="form-control" id="description" name="description" placeholder="Description"
+               th:value="*{description}" th:autofocus="true" />
+        <ul th:if="${#fields.hasErrors('description')}" class="has-error">
+            <li th:each="err : ${#fields.errors('description')}" th:text="${err}" />
+        </ul>
+    </div>
+
+    <a class="btn btn-default" th:href="${referer}">Cancel</a>
+    <button type="submit" class="btn btn-success">Save</button>
+
+</div>
+</body>
+</html>
