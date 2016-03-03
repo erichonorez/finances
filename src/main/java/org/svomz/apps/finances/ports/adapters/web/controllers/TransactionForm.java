@@ -1,5 +1,9 @@
 package org.svomz.apps.finances.ports.adapters.web.controllers;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
@@ -15,6 +19,7 @@ public class TransactionForm {
   private String description;
 
   @NotNull
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
   private Date date;
 
   @NotNull
