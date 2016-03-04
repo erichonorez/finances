@@ -14,9 +14,9 @@ import javax.annotation.Nullable;
  */
 public class Account {
 
-  private final List<Transaction> transactions;
-  private String description;
   private AccountId id;
+  private String description;
+  private final List<Transaction> transactions;
 
   public Account(@Nullable final AccountId accountId, final String description) {
     this.id = accountId;

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.svomz.apps.finances.application.AccountNotFoundException;
 import org.svomz.apps.finances.application.AccountService;
+import org.svomz.apps.finances.application.CreateAccountCommand;
+import org.svomz.apps.finances.application.UpdateAccountDescriptionCommand;
 import org.svomz.apps.finances.domain.model.Account;
 
 import java.util.Set;
@@ -68,7 +70,9 @@ public class AccountController {
       return "account/new";
     }
 
-    Account account = this.accountService.createAccount(form.getDescription());
+    Account account = this.accountService.execute(
+      new CreateAccountCommand(form.getDescription())
+    );
     return "redirect:/accounts/" + account.getAccountId().getId();
   }
 
@@ -80,7 +84,8 @@ public class AccountController {
       return "account/edit";
     }
 
-    Account account = this.accountService.updateAccount(accountId, form.getDescription());
+    Account account = this.accountService.execute(
+      new UpdateAccountDescriptionCommand(accountId, form.getDescription()));
     return "redirect:/accounts/" + account.getAccountId().getId();
   }
 

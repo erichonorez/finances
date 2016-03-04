@@ -32,11 +32,11 @@ public class AccountServiceImpl implements AccountService {
 
   @Override
   @Transactional
-  public Account createAccount(final String description) {
-    Preconditions.checkNotNull(description);
+  public Account execute(CreateAccountCommand command) {
+    Preconditions.checkNotNull(command);
 
     AccountId accountId = this.accountRepository.nextIdentity();
-    return this.accountRepository.create(new Account(accountId, description));
+    return this.accountRepository.create(new Account(accountId, command.getAccountDescription()));
   }
 
   @Override
@@ -97,13 +97,12 @@ public class AccountServiceImpl implements AccountService {
   }
 
   @Override
-  public Account updateAccount(final String accountId, final String description)
+  public Account execute(UpdateAccountDescriptionCommand command)
     throws AccountNotFoundException {
-    Preconditions.checkNotNull(accountId);
-    Preconditions.checkNotNull(description);
+    Preconditions.checkNotNull(command);
 
-    Account account = this.getAccount(accountId);
-    account.setDescription(description);
+    Account account = this.getAccount(command.getAccountId());
+    account.setDescription(command.getDescription());
     return account;
   }
 }

@@ -28,7 +28,7 @@ public class AccountServiceTest {
 
     AccountServiceImpl accountService = new AccountServiceImpl(new InMemoryAccountRepository());
     accounts.forEach(account -> {
-      accountService.createAccount(account);
+      accountService.execute(new CreateAccountCommand(account));
     });
 
     //Then
@@ -40,7 +40,7 @@ public class AccountServiceTest {
   @Test
   public void itShouldAddIncomeToAnAccount() throws AccountNotFoundException {
     AccountServiceImpl accountService = new AccountServiceImpl(new InMemoryAccountRepository());
-    Account account = accountService.createAccount("An account");
+    Account account = accountService.execute(new CreateAccountCommand("An account"));
 
     accountService.execute(
       new AddIncomeCommand(account.getAccountId().getId(), 5, LocalDateTime.of(2016, 01, 01, 0, 1), "Income 1"));
@@ -56,7 +56,7 @@ public class AccountServiceTest {
   @Test
   public void itShouldAddExpenseToAnAccount() throws AccountNotFoundException {
     AccountServiceImpl accountService = new AccountServiceImpl(new InMemoryAccountRepository());
-    Account account = accountService.createAccount("An account");
+    Account account = accountService.execute(new CreateAccountCommand("An account"));
 
     accountService.execute(
       new AddExpenseCommand(account.getAccountId().getId(), 5, LocalDateTime.of(2016, 01, 01, 0, 1), "Expense 1"));
@@ -79,7 +79,7 @@ public class AccountServiceTest {
   public void itShouldRetrieveThePaginatedListOfTransactions() throws AccountNotFoundException {
     //Given an account with a list of three transactions
     AccountServiceImpl accountService = new AccountServiceImpl(new InMemoryAccountRepository());
-    Account account = accountService.createAccount("An account");
+    Account account = accountService.execute(new CreateAccountCommand("An account"));
 
     accountService.execute(
       new AddIncomeCommand(account.getAccountId().getId(), 5, LocalDateTime.of(2016, 01, 01, 0, 1), "Income 1"));
