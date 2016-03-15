@@ -11,6 +11,7 @@ import org.svomz.apps.finances.domain.model.Income;
 import org.svomz.apps.finances.domain.model.Transaction;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -41,7 +42,7 @@ public class AccountServiceImpl implements AccountService {
 
   @Override
   public Set<Account> getAllAccounts() {
-    return this.accountRepository.findAll();
+    return new HashSet<>(this.accountRepository.findAll());
   }
 
   @Override
@@ -97,6 +98,7 @@ public class AccountServiceImpl implements AccountService {
   }
 
   @Override
+  @Transactional
   public Account execute(UpdateAccountDescriptionCommand command)
     throws AccountNotFoundException {
     Preconditions.checkNotNull(command);

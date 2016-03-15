@@ -4,10 +4,17 @@ import com.google.common.base.Preconditions;
 
 import java.math.BigDecimal;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
 /**
  * Created by eric on 28/02/16.
  */
+@Entity
+@DiscriminatorValue("EXPENSE")
 public final class Expense extends Transaction {
+
+  private Expense() {}
 
   private Expense(final TransactionBuilder<ExpenseBuilder, Expense> expenseBuilder) {
     super(expenseBuilder.value, expenseBuilder.date, expenseBuilder.description);

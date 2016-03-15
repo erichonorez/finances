@@ -2,21 +2,42 @@ package org.svomz.apps.finances.domain.model;
 
 import com.google.common.base.Preconditions;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  * Created by eric on 28/02/16.
  */
+@Entity
+@Table(name = "accounts")
 public class Account {
 
+  @EmbeddedId
   private AccountId id;
+
+  @Column(name = "description")
   private String description;
-  private final List<Transaction> transactions;
+
+  @OneToMany
+  @JoinColumn(name="account_id")
+  @Cascade(CascadeType.ALL)
+  private List<Transaction> transactions;
+
+  private Account() {}
 
   public Account(@Nullable final AccountId accountId, final String description) {
     this.id = accountId;
@@ -47,12 +68,14 @@ public class Account {
   public void add(final Expense expense) {
     Preconditions.checkNotNull(expense);
 
+    expense.setAccountId(this.getAccountId().getId());
     this.transactions.add(expense);
   }
 
   public void add(final Income income) {
     Preconditions.checkNotNull(income);
 
+    income.setAccountId(this.getAccountId().getId());
     this.transactions.add(income);
   }
 

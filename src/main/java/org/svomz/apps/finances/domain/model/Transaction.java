@@ -4,16 +4,43 @@ import com.google.common.base.Preconditions;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.Table;
 
 /**
  * Created by eric on 28/02/16.
  */
+@Entity
+@Inheritance
+@DiscriminatorColumn(name="transaction_type")
+@Table(name = "transactions")
 public abstract class Transaction {
 
-  private final BigDecimal value;
-  private final String description;
-  private final LocalDateTime date;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "id")
+  private Long id;
+
+  @Column(name = "value")
+  private BigDecimal value;
+
+  @Column(name = "description")
+  private String description;
+
+  @Column(name = "occured_one")
+  private LocalDateTime date;
+
+  @Column(name="account_id")
+  private String accountId;
+
+  protected Transaction() {}
 
   Transaction(final BigDecimal value, final LocalDateTime date, final String description) {
     Preconditions.checkNotNull(value);
@@ -36,6 +63,10 @@ public abstract class Transaction {
   }
 
   public abstract BigDecimal apply(final BigDecimal balance);
+
+  public void setAccountId(String accountId) {
+    this.accountId = accountId;
+  }
 
   static abstract class TransactionBuilder<BUILDER, RETURN> {
 

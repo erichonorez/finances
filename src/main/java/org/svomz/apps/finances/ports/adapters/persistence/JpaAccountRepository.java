@@ -1,46 +1,50 @@
 package org.svomz.apps.finances.ports.adapters.persistence;
 
-import org.springframework.context.annotation.Profile;
+import com.google.common.collect.Lists;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaContext;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.util.StreamUtils;
 import org.springframework.stereotype.Component;
 import org.svomz.apps.finances.domain.model.Account;
 import org.svomz.apps.finances.domain.model.AccountId;
 import org.svomz.apps.finances.domain.model.AccountRepository;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.persistence.EntityManager;
+
 /**
- * Created by eric on 28/02/16.
+ * Created by eric on 04/03/16.
  */
 @Component
-@Profile(value = "in_memory")
-public class InMemoryAccountRepository implements AccountRepository {
+public class JpaAccountRepository implements AccountRepository {
 
-  private List<Account> accounts = new ArrayList<>();
+  @Autowired
+  private BackendRepository backendRepository;
 
   @Override
   public Account create(Account account) {
-    this.accounts.add(account);
-    return account;
+    return this.backendRepository.save(account);
   }
 
   @Override
   public List<Account> findAll() {
-    return Collections.unmodifiableList(this.accounts);
+    return Lists.newArrayList(this.backendRepository.findAll());
   }
 
   @Override
   public Optional<Account> find(String id) {
-    return this.accounts.stream()
-      .filter(account -> account.getAccountId().getId().equals(id))
-      .findFirst();
+    return Optional.ofNullable(this.backendRepository.findOne(new AccountId(id)));
   }
 
   @Override
   public AccountId nextIdentity() {
     return new AccountId(UUID.randomUUID().toString());
   }
+
 }
