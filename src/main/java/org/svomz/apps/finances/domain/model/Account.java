@@ -23,7 +23,7 @@ public class Account {
   public Account(final AccountId accountId, final String description) {
     this.id = Preconditions.checkNotNull(accountId);
     this.description = Preconditions.checkNotNull(description);
-    this.transactions = new ArrayList<Transaction>();
+    this.transactions = new ArrayList<>();
 
     DomainEventPublisher.instance()
       .publish(new AccountCreated());
@@ -70,8 +70,7 @@ public class Account {
 
   public List<Transaction> getTransactions() {
     return this.transactions.stream().sorted((o1, o2) -> {
-      return o1.getDate().isEqual(o2.getDate()) ? 0
-          : o1.getDate().isBefore(o2.getDate()) ? -1 : 1;
+      return o1.getDate().compareTo(o2.getDate()) * -1;
     }).collect(Collectors.<Transaction>toList());
   }
 
