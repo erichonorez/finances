@@ -11,14 +11,9 @@ import javax.persistence.Id;
 /**
  * Created by eric on 28/02/16.
  */
-@Embeddable
 public class AccountId implements Serializable {
 
-  @Column(name = "id")
   private String id;
-
-  private AccountId() {
-  }
 
   public AccountId(final String accountId) {
     this.id = Preconditions.checkNotNull(accountId);

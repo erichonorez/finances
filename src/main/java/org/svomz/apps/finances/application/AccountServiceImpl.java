@@ -37,7 +37,9 @@ public class AccountServiceImpl implements AccountService {
     Preconditions.checkNotNull(command);
 
     AccountId accountId = this.accountRepository.nextIdentity();
-    return this.accountRepository.create(new Account(accountId, command.getAccountDescription()));
+    Account account = new Account(accountId, command.getAccountDescription());
+    this.accountRepository.create(account);
+    return account;
   }
 
   @Override

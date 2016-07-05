@@ -16,7 +16,6 @@ import java.util.UUID;
  * Created by eric on 28/02/16.
  */
 @Component
-@Profile(value = "in_memory")
 public class InMemoryAccountRepository implements AccountRepository {
 
   private List<Account> accounts = new ArrayList<>();

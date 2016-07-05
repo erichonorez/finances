@@ -8,11 +8,11 @@ import java.util.Optional;
  */
 public interface AccountRepository {
 
-  Account create(Account account);
-
   List<Account> findAll();
 
   Optional<Account> find(String id);
 
   AccountId nextIdentity();
+
+  Account create(Account account);
 }

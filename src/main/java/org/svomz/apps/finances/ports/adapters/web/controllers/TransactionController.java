@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.svomz.apps.finances.application.AccountNotFoundException;
 import org.svomz.apps.finances.application.AccountService;
 import org.svomz.apps.finances.application.AddExpenseCommand;
@@ -15,6 +16,7 @@ import org.svomz.apps.finances.domain.model.Account;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.stream.IntStream;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -74,6 +76,37 @@ public class TransactionController {
       default:
         throw new UnsupportedOperationException();
     }
+    return "redirect:/accounts/" + accountId;
+  }
+
+  @RequestMapping(path = "/bulk-new", method = RequestMethod.GET)
+  public String bulkNew(@PathVariable final String accountId, @RequestParam(name="count", defaultValue = "1") int count, Model model)
+    throws AccountNotFoundException {
+
+    Account account = this.accountService.getAccount(accountId);
+    model.addAttribute("account", account);
+    BulkTransactionForm bulkTransactionForm = new BulkTransactionForm();
+
+    IntStream.rangeClosed(1, count).forEach(i -> {
+      bulkTransactionForm.getTransactions().add(new TransactionForm());
+    });
+
+    model.addAttribute("bulkTransactionForm", bulkTransactionForm);
+    return "transaction/bulk-new";
+  }
+
+  @RequestMapping(path = "bulk-create", method = RequestMethod.POST)
+  public String bulkCreate(@PathVariable final String accountId,
+      @Valid BulkTransactionForm form, BindingResult bindingResult, Model model)
+    throws AccountNotFoundException {
+
+    if (bindingResult.hasErrors()) {
+      Account account = this.accountService.getAccount(accountId);
+      model.addAttribute("account", account);
+      model.addAttribute("bulkTransactionForm", form);
+      return "transaction/bulk-new";
+    }
+
     return "redirect:/accounts/" + accountId;
   }
 
