@@ -1,6 +1,7 @@
 package org.svomz.apps.finances.application;
 
 import org.junit.Test;
+import org.springframework.data.domain.Page;
 import org.svomz.apps.finances.domain.model.*;
 import org.svomz.apps.finances.ports.adapters.persistence.InMemoryAccountRepository;
 
