@@ -8,9 +8,6 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.svomz.apps.finances.domain.model.Builders.an;
 
-/**
- * Created by eric on 28/02/16.
- */
 public class AccountTest {
 
   @Test

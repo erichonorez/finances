@@ -15,9 +15,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-/**
- * Created by eric on 28/02/16.
- */
 public class AccountServiceTest {
 
   @Test
