@@ -2,7 +2,7 @@ package org.svomz.apps.finances.domain.model
 
 import java.util.Date
 
-import scalaz.{Reader, \/}
+import scalaz.{NonEmptyList, Reader, Validation, \/}
 
 trait AccountService[Account, AccountNumber, Amount, Transaction, AccountRepository] {
   type AccountOp = Reader[AccountRepository, \/[Throwable, Account]]
@@ -12,4 +12,5 @@ trait AccountService[Account, AccountNumber, Amount, Transaction, AccountReposit
   def debit(no: AccountNumber, date: Date, amount: Amount, descriptionOption: Option[String]): AccountOp
   def balance(no: AccountNumber): Reader[AccountRepository, \/[Throwable, Amount]]
   def transactions(no: AccountNumber): Reader[AccountRepository, \/[Throwable, List[Transaction]]]
+
 }

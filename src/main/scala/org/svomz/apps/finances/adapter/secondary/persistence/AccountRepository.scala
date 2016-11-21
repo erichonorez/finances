@@ -4,16 +4,16 @@ import java.util.UUID
 
 import org.svomz.apps.finances.domain.model.{Account, AccountRepository}
 
-import scala.collection.mutable.MutableList
+import scala.collection.mutable
 
-object AccountRepository extends AccountRepository[String] {
-  var accounts: MutableList[Account] = MutableList.empty
+class InMemoryAccountRepository extends AccountRepository[String] {
+  val accounts: mutable.HashMap[String, Account] = mutable.HashMap.empty
 
   override def persist(account: Account): Account = {
-    accounts :+ account
+    accounts.put(account.no, account)
     account
   }
 
-  override def fetch(no: String): Option[Account] = accounts.filter(_.no.equals(no)).headOption
+  override def fetch(no: String): Option[Account] = accounts.get(no)
   override def nextAccountNumber: String = UUID.randomUUID().toString
 }
