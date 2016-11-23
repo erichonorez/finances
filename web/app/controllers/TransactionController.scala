@@ -34,11 +34,8 @@ class TransactionController @Inject()(val messagesApi: MessagesApi) extends Cont
   }
 
   def createBulk(id: String) = Action { implicit request =>
-
-    val referer = request.headers.get("referer").getOrElse(routes.HomeController.show(id).absoluteURL())
-
     formBulk.bindFromRequest.fold(
-      formWithErrors => BadRequest(views.html.transactions.addBulk(UUID.randomUUID.toString, formWithErrors, List(Credit(), Debit()).map(v => (TransactionType.map(v), TransactionType.map(v))),referer)),
+      formWithErrors => BadRequest(views.html.transactions.addBulk(UUID.randomUUID.toString, formWithErrors, List(Credit(), Debit()).map(v => (TransactionType.map(v), TransactionType.map(v))), formWithErrors.data("referer"))),
       form => Redirect(form.referer)
     )
   }
