@@ -15,6 +15,7 @@ lazy val core = project
     .settings(commonSettings: _*)
 
 lazy val web = project
-    .settings(commonSettings: _*)   .dependsOn(core)
+    .settings(commonSettings: _*)
+    .dependsOn(core)
 
     

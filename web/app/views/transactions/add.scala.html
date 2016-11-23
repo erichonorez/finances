@@ -1,0 +1,20 @@
+@(accountId: String, form: Form[models.TransactionFormData], options: Seq[(String, String)], referer: String)(implicit messages: Messages)
+
+@import views.helpers.AccountHelper._
+
+
+@main("Add a transaction") {
+
+    @helper.form(action = controllers.routes.TransactionController.create(accountId)) {
+        @helper.select(form("type"), options ,'id -> "transaction_type", '_label -> "Transaction type", 'class -> "form-control", '_showConstraints -> false)
+        @helper.inputText(form("amount"), 'id -> "amount", 'class -> "form-control", '_label -> "Amount", '_showConstraints -> false)
+        @helper.inputDate(form("date"), 'id -> "date", 'class -> "form-control", '_label -> "Date", '_showConstraints -> false)
+        @helper.inputText(form("description"), 'id -> "description", 'class -> "form-control", '_label -> "Transaction description", '_showConstraints -> false)
+
+        <input type="hidden" name="referer" value="@referer" />
+
+        <a class="btn btn-default" href="@referer">Cancel</a>
+        <button type="submit" class="btn btn-success">Save</button>
+    }
+
+}

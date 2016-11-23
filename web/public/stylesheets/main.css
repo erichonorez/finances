@@ -1,0 +1,22 @@
+.debit {
+    color: #d9534f;
+}
+
+.debit:before {
+    content: '';
+}
+
+.credit {
+    color: #5cb85c;
+}
+
+.credit:before {
+    content: '\00a0';
+}
+
+ul.has-error {
+    list-style: none;
+    padding-left: 0px;
+    color: #a94442;
+    font-weight: bold;
+}

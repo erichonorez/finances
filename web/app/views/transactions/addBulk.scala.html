@@ -1,0 +1,35 @@
+@(id: String, form: Form[TransactionBulkFormData], options: Seq[(String, String)], referer: String)(implicit messages: Messages)
+
+@import views.helpers.AccountHelper._
+
+@main("Bulk") {
+
+    @helper.form(action = routes.TransactionController.createBulk(id), args = 'class -> "form-inline") {
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+            @helper.repeat(form("transactions"), min = 2) { field =>
+                <tr>
+                    <td>@helper.select(field("type"), options ,'id -> "transaction_type", '_label -> null, 'class -> "form-control", '_showConstraints -> false)</td>
+                    <td>@helper.inputText(field("amount"), 'id -> "amount", 'class -> "form-control", '_label -> null, '_showConstraints -> false)</td>
+                    <td>@helper.inputDate(field("date"), 'id -> "date", 'class -> "form-control", '_label -> null, '_showConstraints -> false)</td>
+                    <td>@helper.inputText(field("description"), 'id -> "description", 'class -> "form-control", '_label -> null, '_showConstraints -> false)</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+
+        <a class="btn btn-default" href="@referer">Cancel</a>
+        <button type="submit" class="btn btn-success">Save</button>
+
+    }
+
+}

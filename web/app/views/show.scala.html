@@ -1,0 +1,40 @@
+@(account: models.AccountDetail)
+
+@import views.helpers.AccountHelper._
+
+@main("show") {
+    <h2><a href="@controllers.routes.HomeController.index">Accounts</a> - <span>@account.description</span> <a href="@controllers.routes.HomeController.edit(account.id)"><span class="glyphicon glyphicon-pencil account-edit-btn" aria-hidden="true"></span></a></h2>
+    <p><strong>Actual balance:</strong> <span class="@transactionAmountClassOf(account.balance)">@account.balance</span></p>
+    <h3>Transactions
+        <div class="btn-group pull-right">
+            <a href="@controllers.routes.TransactionController.add(account.id)" class="btn btn-success">Add</a>
+            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="@routes.TransactionController.addBulk(account.id)">Bulk</a></li>
+            </ul>
+        </div>
+    </h3>
+
+    <table class="table table-over transactions transactions-table">
+        <thead>
+        <tr>
+
+            <th class="transactions-table-date">Date</th>
+            <th class="transactions-table-amount">Amount</th>
+            <th class="transactions-table-description">Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        @for(transaction <- account.transactions) {
+            <tr>
+                <td>@transaction.date</td>
+                <td><span class="@transactionAmountClassOf(account.balance)">@transaction.amount</span></td>
+                <td>@transaction.description</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

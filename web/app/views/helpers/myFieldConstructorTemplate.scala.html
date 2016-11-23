@@ -1,0 +1,15 @@
+@(elements: helper.FieldElements)
+
+<div class="form-group @if(elements.hasErrors) {has-error}">
+    <label for="@elements.id">@elements.label</label>
+    @elements.input
+    <span class="help">@elements.infos.mkString(", ")</span>
+
+    @if(!elements.errors.isEmpty) {
+        <ul class="has-error">
+            @for(error <- elements.errors) {
+                <li>@error</li>
+            }
+        </ul>
+    }
+</div>

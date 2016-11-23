@@ -6,7 +6,7 @@ import org.scalacheck._
 import Arbitrary._
 import org.scalacheck.Prop.{BooleanOperators, forAll}
 import org.svomz.apps.finances.core.adapter.secondary.persistence.InMemoryAccountRepository
-import org.svomz.apps.finances.core.model.Account
+import org.svomz.apps.finances.core.domain.model.Account
 
 object AccountServiceInterpreterUnitTest extends Properties("AccountServiceInterpreter") {
 
