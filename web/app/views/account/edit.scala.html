@@ -3,7 +3,7 @@
 @main(s"Edit account ${id}") {
 
     @helper.form(action = controllers.routes.AccountController.update(id)) {
-        @partials.form(form, referer)
+        @account.partials.form(form, referer)
     }
 
 }

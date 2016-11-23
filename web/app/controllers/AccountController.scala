@@ -19,7 +19,7 @@ import services.WebUtil._
 class AccountController @Inject()(val messagesApi: MessagesApi) extends Controller with I18nSupport {
 
   def index = Action { implicit request =>
-    Ok(views.html.index(
+    Ok(views.html.account.index(
       List(
         AccountListItem(UUID.randomUUID.toString, "Provision charge appartement", BigDecimal.valueOf(10)),
         AccountListItem(UUID.randomUUID.toString, "Epargne", BigDecimal.valueOf(-10))
@@ -28,7 +28,7 @@ class AccountController @Inject()(val messagesApi: MessagesApi) extends Controll
   }
 
   def show(id: String) = Action { implicit request =>
-    Ok(views.html.show(
+    Ok(views.html.account.show(
       AccountDetail(
         UUID.randomUUID.toString,
         "A description",
@@ -45,13 +45,13 @@ class AccountController @Inject()(val messagesApi: MessagesApi) extends Controll
   }
 
   def add = Action { implicit request =>
-    Ok(views.html.add(form, referer))
+    Ok(views.html.account.add(form, referer))
   }
 
   def create = Action { implicit request =>
     form.bindFromRequest.fold(
       formWithErrors => {
-        BadRequest(views.html.add(formWithErrors, formWithErrors.data("referer")))
+        BadRequest(views.html.account.add(formWithErrors, formWithErrors.data("referer")))
       },
       formData => {
         Redirect(formData.referer).flashing(
@@ -62,7 +62,7 @@ class AccountController @Inject()(val messagesApi: MessagesApi) extends Controll
   }
 
   def remove(id: String) = Action { implicit request =>
-    Ok(views.html.remove(UUID.randomUUID.toString, "A description", referer))
+    Ok(views.html.account.remove(UUID.randomUUID.toString, "A description", referer))
   }
 
   def delete(id: String) = Action { implicit request =>
@@ -72,13 +72,13 @@ class AccountController @Inject()(val messagesApi: MessagesApi) extends Controll
   }
 
   def edit(id: String) = Action { implicit request =>
-    Ok(views.html.edit(id, form.fill(AccountFormData("a description", referer)), referer))
+    Ok(views.html.account.edit(id, form.fill(AccountFormData("a description", referer)), referer))
   }
 
   def update(id: String) = Action { implicit request =>
     form.bindFromRequest.fold(
       formWithErrors => {
-        BadRequest(views.html.edit(id, formWithErrors, formWithErrors.data("referer")))
+        BadRequest(views.html.account.edit(id, formWithErrors, formWithErrors.data("referer")))
       },
       formData => {
         Redirect(formData.referer).flashing(

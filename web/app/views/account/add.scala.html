@@ -3,7 +3,7 @@
 @main("Add an account") {
 
     @helper.form(action = controllers.routes.AccountController.create) {
-        @partials.form(form, referer)
+        @account.partials.form(form, referer)
     }
 
 }
