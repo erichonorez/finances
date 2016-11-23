@@ -9,6 +9,7 @@ import play.api.data._
 import play.api.data.Forms._
 import play.api.i18n._
 import models._
+import services.WebUtil._
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
@@ -17,7 +18,7 @@ import models._
 @Singleton
 class HomeController @Inject()(val messagesApi: MessagesApi) extends Controller with I18nSupport {
 
-  def index = Action {
+  def index = Action { implicit request =>
     Ok(views.html.index(
       List(
         AccountListItem(UUID.randomUUID.toString, "Provision charge appartement", BigDecimal.valueOf(10)),
@@ -26,7 +27,7 @@ class HomeController @Inject()(val messagesApi: MessagesApi) extends Controller 
     ))
   }
 
-  def show(id: String) = Action {
+  def show(id: String) = Action { implicit request =>
     Ok(views.html.show(
       AccountDetail(
         UUID.randomUUID.toString,
@@ -44,11 +45,6 @@ class HomeController @Inject()(val messagesApi: MessagesApi) extends Controller 
   }
 
   def add = Action { implicit request =>
-    val referer = request.headers.get("referer") match {
-      case Some(r) => r
-      case None => routes.HomeController.index().absoluteURL()
-    }
-
     Ok(views.html.add(form, referer))
   }
 
@@ -58,7 +54,9 @@ class HomeController @Inject()(val messagesApi: MessagesApi) extends Controller 
         BadRequest(views.html.add(formWithErrors, formWithErrors.data("referer")))
       },
       formData => {
-        Redirect(formData.referer)
+        Redirect(formData.referer).flashing(
+          "success" -> "Account successfully created"
+        )
       }
     )
   }
@@ -71,12 +69,21 @@ class HomeController @Inject()(val messagesApi: MessagesApi) extends Controller 
     Ok(s"delete account ${id}")
   }
 
-  def edit(id: String) = Action {
-    Ok(s"edit account ${id}")
+  def edit(id: String) = Action { implicit request =>
+    Ok(views.html.edit(id, form.fill(AccountFormData("a description", referer)), referer))
   }
 
-  def update(id: String) = Action {
-    Ok(s"update account ${id}")
+  def update(id: String) = Action { implicit request =>
+    form.bindFromRequest.fold(
+      formWithErrors => {
+        BadRequest(views.html.edit(id, formWithErrors, formWithErrors.data("referer")))
+      },
+      formData => {
+        Redirect(formData.referer).flashing(
+          "success" -> "Account successfully edited"
+        )
+      }
+    )
   }
 
   private def form = Form(
@@ -85,4 +92,6 @@ class HomeController @Inject()(val messagesApi: MessagesApi) extends Controller 
       "referer"     -> text
     )(AccountFormData.apply)(AccountFormData.unapply)
   )
+
+  private def referer(implicit request: RequestHeader):String = refererOr(routes.HomeController.index().absoluteURL())
 }

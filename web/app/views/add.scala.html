@@ -1,16 +1,9 @@
-@(form: Form[models.AccountFormData], referer: String)(implicit messages: Messages)
-
-@import views.helpers.AccountHelper._
-
+@(form: Form[models.AccountFormData], referer: String)(implicit messages: Messages, flash: Flash)
 
 @main("Add an account") {
 
     @helper.form(action = controllers.routes.HomeController.create) {
-        @helper.inputText(form("description"), 'id -> "description", 'class -> "form-control", '_label -> "Account description", '_showConstraints -> false)
-        <input type="hidden" name="referer" value="@referer" />
-
-        <a class="btn btn-default" href="@referer">Cancel</a>
-        <button type="submit" class="btn btn-success">Save</button>
+        @partials.form(form, referer)
     }
 
 }

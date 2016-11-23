@@ -1,4 +1,4 @@
-@(accountId: String, form: Form[models.TransactionFormData], options: Seq[(String, String)], referer: String)(implicit messages: Messages)
+@(accountId: String, form: Form[models.TransactionFormData], options: Seq[(String, String)], referer: String)(implicit messages: Messages, flash: Flash)
 
 @import views.helpers.AccountHelper._
 

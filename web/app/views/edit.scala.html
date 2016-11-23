@@ -1,0 +1,9 @@
+@(id: String, form: Form[models.AccountFormData], referer: String)(implicit messages: Messages, flash: Flash)
+
+@main(s"Edit account ${id}") {
+
+    @helper.form(action = controllers.routes.HomeController.update(id)) {
+        @partials.form(form, referer)
+    }
+
+}
