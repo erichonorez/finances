@@ -15,7 +15,7 @@ import models._
 class TransactionController @Inject()(val messagesApi: MessagesApi) extends Controller with I18nSupport {
 
   def add(id: String) = Action { implicit request =>
-    val referer = request.headers.get("referer").getOrElse(routes.HomeController.show(id).absoluteURL())
+    val referer = request.headers.get("referer").getOrElse(routes.AccountController.show(id).absoluteURL())
 
     Ok(views.html.transactions.add(UUID.randomUUID.toString, form, List(Credit(), Debit()).map(v => (TransactionType.map(v), TransactionType.map(v))), referer))
   }
@@ -28,7 +28,7 @@ class TransactionController @Inject()(val messagesApi: MessagesApi) extends Cont
   }
 
   def addBulk(id: String) = Action { implicit request =>
-    val referer = request.headers.get("referer").getOrElse(routes.HomeController.show(id).absoluteURL())
+    val referer = request.headers.get("referer").getOrElse(routes.AccountController.show(id).absoluteURL())
 
     Ok(views.html.transactions.addBulk(UUID.randomUUID.toString, formBulk, List(Credit(), Debit()).map(v => (TransactionType.map(v), TransactionType.map(v))),referer))
   }

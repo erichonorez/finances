@@ -16,7 +16,7 @@ import services.WebUtil._
  * application's home page.
  */
 @Singleton
-class HomeController @Inject()(val messagesApi: MessagesApi) extends Controller with I18nSupport {
+class AccountController @Inject()(val messagesApi: MessagesApi) extends Controller with I18nSupport {
 
   def index = Action { implicit request =>
     Ok(views.html.index(
@@ -95,5 +95,5 @@ class HomeController @Inject()(val messagesApi: MessagesApi) extends Controller 
     )(AccountFormData.apply)(AccountFormData.unapply)
   )
 
-  private def referer(implicit request: RequestHeader):String = refererOr(routes.HomeController.index().absoluteURL())
+  private def referer(implicit request: RequestHeader):String = refererOr(routes.AccountController.index().absoluteURL())
 }

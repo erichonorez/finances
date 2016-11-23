@@ -2,7 +2,7 @@
 
 @main(s"Delete account '${description}'") {
 
-    @helper.form(action = routes.HomeController.delete(id)) {
+    @helper.form(action = routes.AccountController.delete(id)) {
 
         <p class="bg-danger msg-danger">You are going to delete account "@description". Are you sure?</p>
 

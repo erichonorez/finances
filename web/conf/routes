@@ -1,21 +1,17 @@
-# Routes
-# This file defines all application routes (Higher priority routes first)
-# ~~~~
+# Accounts
+GET     /                               controllers.Default.redirect(to = "/accounts")
+GET     /accounts                       controllers.AccountController.index
+GET     /accounts/new                   controllers.AccountController.add
+POST     /accounts/create               controllers.AccountController.create
+GET     /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>             controllers.AccountController.show(id)
+GET     /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/edit        controllers.AccountController.edit(id)
+POST    /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/update      controllers.AccountController.update(id)
+GET     /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/remove      controllers.AccountController.remove(id)
+POST    /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/delete      controllers.AccountController.delete(id)
 
-# An example controller showing a sample home page
-GET     /accounts                       controllers.HomeController.index
-GET     /accounts/new                   controllers.HomeController.add
-POST     /accounts/create               controllers.HomeController.create
-GET     /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>             controllers.HomeController.show(id)
-GET     /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/edit        controllers.HomeController.edit(id)
-POST    /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/update      controllers.HomeController.update(id)
-GET     /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/remove      controllers.HomeController.remove(id)
-POST    /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/delete      controllers.HomeController.delete(id)
-
+# Transactions
 GET     /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/transactions/new        controllers.TransactionController.add(id)
 POST    /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/transactions/create     controllers.TransactionController.create(id)
-
-
 GET     /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/transactions/new-bulk        controllers.TransactionController.addBulk(id)
 POST    /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/transactions/create-bulk     controllers.TransactionController.createBulk(id)
 
