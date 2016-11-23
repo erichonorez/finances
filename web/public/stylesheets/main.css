@@ -24,3 +24,7 @@ ul.has-error {
 .msg-danger {
     padding: 15px;
 }
+
+.account-edit-btn {
+    font-size: 14px;
+}
