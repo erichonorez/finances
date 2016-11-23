@@ -30,7 +30,7 @@
         <tbody>
         @for(transaction <- account.transactions) {
             <tr>
-                <td>@transaction.date</td>
+                <td>@formatDate(transaction.date)</td>
                 <td><span class="@transactionAmountClassOf(account.balance)">@transaction.amount</span></td>
                 <td>@transaction.description</td>
             </tr>
