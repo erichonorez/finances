@@ -1,0 +1,16 @@
+@(id: String, description: String, referer: String)(implicit messages: Messages, flash: Flash)
+
+@main(s"Delete account '${description}'") {
+
+    @helper.form(action = routes.HomeController.delete(id)) {
+
+        <p class="bg-danger msg-danger">You are going to delete account "@description". Are you sure?</p>
+
+        <input type="hidden" name="referer" value="@referer" />
+
+        <a class="btn btn-default" href="@referer">Cancel</a>
+        <button type="submit" class="btn btn-danger">Save</button>
+
+    }
+
+}

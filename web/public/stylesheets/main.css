@@ -20,3 +20,7 @@ ul.has-error {
     color: #a94442;
     font-weight: bold;
 }
+
+.msg-danger {
+    padding: 15px;
+}

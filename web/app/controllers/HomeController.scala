@@ -61,12 +61,14 @@ class HomeController @Inject()(val messagesApi: MessagesApi) extends Controller 
     )
   }
 
-  def remove(id: String) = Action {
-    Ok(s"remove account ${id}")
+  def remove(id: String) = Action { implicit request =>
+    Ok(views.html.remove(UUID.randomUUID.toString, "A description", referer))
   }
 
-  def delete(id: String) = Action {
-    Ok(s"delete account ${id}")
+  def delete(id: String) = Action { implicit request =>
+    Redirect(request.body.asFormUrlEncoded.get.get("referer").head.head).flashing(
+      "success" -> "Account successfully deleted"
+    )
   }
 
   def edit(id: String) = Action { implicit request =>
