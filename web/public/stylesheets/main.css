@@ -28,3 +28,16 @@ ul.has-error {
 .account-edit-btn {
     font-size: 14px;
 }
+
+
+th.transactions-table-date {
+    width: 170px;
+}
+
+th.transactions-table-amount {
+    width: 170px;
+}
+
+table.transactions td.transaction {
+    padding-right: 20px;
+}
