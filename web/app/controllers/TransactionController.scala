@@ -17,12 +17,12 @@ class TransactionController @Inject()(val messagesApi: MessagesApi) extends Cont
   def add(id: String) = Action { implicit request =>
     val referer = request.headers.get("referer").getOrElse(routes.AccountController.show(id).absoluteURL())
 
-    Ok(views.html.transactions.add(UUID.randomUUID.toString, form, List(Credit(), Debit()).map(v => (TransactionType.map(v), TransactionType.map(v))), referer))
+    Ok(views.html.transaction.add(UUID.randomUUID.toString, form, List(Credit(), Debit()).map(v => (TransactionType.map(v), TransactionType.map(v))), referer))
   }
 
   def create(id: String) = Action { implicit request =>
     form.bindFromRequest.fold(
-      formWithErrors => BadRequest(views.html.transactions.add(UUID.randomUUID.toString, formWithErrors, List(Credit(), Debit()).map(v => (TransactionType.map(v), TransactionType.map(v))), formWithErrors.data("referer"))),
+      formWithErrors => BadRequest(views.html.transaction.add(UUID.randomUUID.toString, formWithErrors, List(Credit(), Debit()).map(v => (TransactionType.map(v), TransactionType.map(v))), formWithErrors.data("referer"))),
       form => Redirect(form.referer)
     )
   }
@@ -30,12 +30,12 @@ class TransactionController @Inject()(val messagesApi: MessagesApi) extends Cont
   def addBulk(id: String) = Action { implicit request =>
     val referer = request.headers.get("referer").getOrElse(routes.AccountController.show(id).absoluteURL())
 
-    Ok(views.html.transactions.addBulk(UUID.randomUUID.toString, formBulk, List(Credit(), Debit()).map(v => (TransactionType.map(v), TransactionType.map(v))),referer))
+    Ok(views.html.transaction.addBulk(UUID.randomUUID.toString, formBulk, List(Credit(), Debit()).map(v => (TransactionType.map(v), TransactionType.map(v))),referer))
   }
 
   def createBulk(id: String) = Action { implicit request =>
     formBulk.bindFromRequest.fold(
-      formWithErrors => BadRequest(views.html.transactions.addBulk(UUID.randomUUID.toString, formWithErrors, List(Credit(), Debit()).map(v => (TransactionType.map(v), TransactionType.map(v))), formWithErrors.data("referer"))),
+      formWithErrors => BadRequest(views.html.transaction.addBulk(UUID.randomUUID.toString, formWithErrors, List(Credit(), Debit()).map(v => (TransactionType.map(v), TransactionType.map(v))), formWithErrors.data("referer"))),
       form => Redirect(form.referer)
     )
   }
