@@ -2,10 +2,6 @@
     color: #d9534f;
 }
 
-.expense:before {
-    content: '-';
-}
-
 .positive-amount {
     color: #5cb85c;
 }

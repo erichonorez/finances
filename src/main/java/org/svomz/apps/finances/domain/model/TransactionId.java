@@ -4,20 +4,16 @@ import com.google.common.base.Preconditions;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.Id;
-
 /**
- * Created by eric on 28/02/16.
+ * Created by eric on 15/04/17.
  */
-public class AccountId implements Serializable {
+public class TransactionId implements Serializable {
 
-    private String id;
+  private String id;
 
-  public AccountId(final String accountId) {
-      this.id = Preconditions.checkNotNull(accountId);
-    }
+  public TransactionId(final String transactionId) {
+    this.id = Preconditions.checkNotNull(transactionId);
+  }
 
   public String getId() {
     return this.id;
@@ -32,9 +28,9 @@ public class AccountId implements Serializable {
       return false;
     }
 
-    AccountId accountId = (AccountId) o;
+    TransactionId that = (TransactionId) o;
 
-    return id.equals(accountId.id);
+    return id.equals(that.id);
 
   }
 

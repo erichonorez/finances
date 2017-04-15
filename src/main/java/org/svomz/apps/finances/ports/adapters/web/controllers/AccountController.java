@@ -45,6 +45,8 @@ public class AccountController {
   public String show(@PathVariable String accountId, Model model)
     throws AccountNotFoundException {
     model.addAttribute("account", this.accountService.getAccount(accountId));
+    model.addAttribute("transactions", this.accountService.getTransactions(accountId, 1, 10));
+    model.addAttribute("balance", this.accountService.balance(accountId));
     return "account/show";
   }
 

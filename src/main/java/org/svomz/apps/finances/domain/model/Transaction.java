@@ -10,23 +10,27 @@ import java.time.LocalDateTime;
  */
 public abstract class Transaction {
 
-  private BigDecimal value;
+  private final AccountId accountId;
 
-  private String description;
+  private final BigDecimal amount;
 
-  private LocalDateTime date;
+  private final String description;
 
-  Transaction(final BigDecimal value, final LocalDateTime date, final String description) {
-    Preconditions.checkNotNull(value);
+  private final LocalDateTime date;
 
-    this.value = value;
+  Transaction(TransactionId transactionId, AccountId accountId, final BigDecimal amount, final LocalDateTime date,
+    final String description) {
+    Preconditions.checkNotNull(transactionId);
+    Preconditions.checkNotNull(accountId);
+    Preconditions.checkNotNull(amount);
+
+    this.accountId = accountId;
+    this.amount = amount.abs();
     this.date = date;
     this.description = description;
   }
 
-  public BigDecimal value() {
-    return this.value;
-  }
+  public abstract BigDecimal value();
 
   public LocalDateTime getDate() {
     return date;
@@ -38,38 +42,11 @@ public abstract class Transaction {
 
   public abstract BigDecimal apply(final BigDecimal balance);
 
-  static abstract class TransactionBuilder<BUILDER, RETURN> {
+  public AccountId getAccountId() {
+    return accountId;
+  }
 
-    LocalDateTime date;
-    String description;
-    BigDecimal value;
-
-    public BUILDER of(final BigDecimal value) {
-      Preconditions.checkNotNull(value);
-      this.value = value;
-      return (BUILDER) this;
-    }
-
-    public BUILDER occuredOn(final LocalDateTime date) {
-      Preconditions.checkNotNull(date);
-      this.date = date;
-      return (BUILDER) this;
-    }
-
-    public BUILDER withDescription(final String description) {
-      Preconditions.checkNotNull(description);
-      this.description = description;
-      return (BUILDER) this;
-    }
-
-    public RETURN build() {
-      Preconditions.checkState(this.value != null);
-      Preconditions.checkState(this.date != null);
-      Preconditions.checkState(this.description != null);
-
-      return this.newTransaction();
-    }
-
-    protected abstract RETURN newTransaction();
+  public BigDecimal getAmount() {
+    return amount;
   }
 }

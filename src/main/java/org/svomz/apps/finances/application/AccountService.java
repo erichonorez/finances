@@ -3,6 +3,7 @@ package org.svomz.apps.finances.application;
 import org.svomz.apps.finances.domain.model.Account;
 import org.svomz.apps.finances.domain.model.Transaction;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 
@@ -26,5 +27,7 @@ public interface AccountService {
     throws AccountNotFoundException;
 
   Account getAccount(String id) throws AccountNotFoundException;
+
+  BigDecimal balance(String accountId) throws AccountNotFoundException;
 
 }

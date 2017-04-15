@@ -46,7 +46,6 @@ public class TransactionController {
 
   @RequestMapping(path = "/create", method = RequestMethod.POST)
   public String createTransaction(@PathVariable final String accountId, @Valid TransactionForm transactionForm, BindingResult bindingResult, Model model)
-
     throws AccountNotFoundException {
     if (bindingResult.hasErrors()) {
       Account account = this.accountService.getAccount(accountId);

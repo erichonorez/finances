@@ -6,10 +6,12 @@ import org.springframework.stereotype.Component;
 import org.svomz.apps.finances.domain.model.Account;
 import org.svomz.apps.finances.domain.model.AccountId;
 import org.svomz.apps.finances.domain.model.AccountRepository;
+import org.svomz.apps.finances.domain.model.Accounts;
 import org.svomz.apps.finances.domain.model.Expense;
-import org.svomz.apps.finances.domain.model.Income;
 import org.svomz.apps.finances.domain.model.Transaction;
+import org.svomz.apps.finances.domain.model.TransactionRepository;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -26,9 +28,12 @@ public class AccountServiceImpl implements AccountService {
 
   private final AccountRepository accountRepository;
 
+  private final TransactionRepository transactionRepository;
+
   @Inject
-  public AccountServiceImpl(final AccountRepository accountRepository) {
+  public AccountServiceImpl(final AccountRepository accountRepository, final TransactionRepository transactionRepository) {
     this.accountRepository = Preconditions.checkNotNull(accountRepository);
+    this.transactionRepository = Preconditions.checkNotNull(transactionRepository);
   }
 
   @Override
@@ -54,10 +59,13 @@ public class AccountServiceImpl implements AccountService {
 
     Account account = this.getAccount(command.getAccountId());
 
-    account.add(Income.of(command.getValue())
-      .occuredOn(command.getDateTime())
-      .withDescription(command.getDescription())
-      .build());
+    Accounts.addIncome(
+      account,
+      BigDecimal.valueOf(command.getValue()),
+      command.getDateTime(),
+      command.getDescription()
+    ).apply(this.transactionRepository);
+
   }
 
   @Override
@@ -67,10 +75,13 @@ public class AccountServiceImpl implements AccountService {
 
     Account account = this.getAccount(command.getAccountId());
 
-    account.add(Expense.of(command.getValue())
-      .occuredOn(command.getDateTime())
-      .withDescription(command.getDescription())
-      .build());
+    Expense expense = Accounts.addExpense(
+      account,
+      BigDecimal.valueOf(command.getValue()),
+      command.getDateTime(),
+      command.getDescription()
+    ).apply(this.transactionRepository);
+
   }
 
   @Override
@@ -80,15 +91,7 @@ public class AccountServiceImpl implements AccountService {
 
     Account account = this.getAccount(accountId);
 
-    List<Transaction> transactions = new ArrayList<>();
-
-    int fromIndex = page * size;
-    int toIndex = (page + 1) * size;
-    for (int i = fromIndex; i < toIndex; i++) {
-      transactions.add(account.getTransactions().get(i));
-    }
-
-    return transactions;
+    return this.transactionRepository.findByAccountId(account.getAccountId(), page, size);
   }
 
   @Override
@@ -97,6 +100,16 @@ public class AccountServiceImpl implements AccountService {
 
     return this.accountRepository.find(id)
       .orElseThrow(() -> new AccountNotFoundException(id));
+  }
+
+  @Override
+  public BigDecimal balance(String accountId) throws AccountNotFoundException {
+    Preconditions.checkNotNull(accountId);
+
+    Account account = this.getAccount(accountId);
+
+    return Accounts.balance(account)
+      .apply(this.transactionRepository);
   }
 
   @Override

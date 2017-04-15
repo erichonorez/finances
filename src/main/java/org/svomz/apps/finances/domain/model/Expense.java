@@ -3,14 +3,16 @@ package org.svomz.apps.finances.domain.model;
 import com.google.common.base.Preconditions;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * Created by eric on 28/02/16.
  */
 public final class Expense extends Transaction {
 
-  private Expense(final TransactionBuilder<ExpenseBuilder, Expense> expenseBuilder) {
-    super(expenseBuilder.value, expenseBuilder.date, expenseBuilder.description);
+  Expense(TransactionId transactionId, AccountId accountId, final BigDecimal value, final LocalDateTime date,
+    final String description) {
+    super(transactionId, accountId, value, date, description);
   }
 
   @Override
@@ -20,16 +22,8 @@ public final class Expense extends Transaction {
     return balance.subtract(this.value());
   }
 
-  public static ExpenseBuilder of(final double value) {
-    return new ExpenseBuilder()
-      .of(BigDecimal.valueOf(value));
+  public BigDecimal value() {
+    return this.getAmount().negate();
   }
 
-  public static class ExpenseBuilder extends TransactionBuilder<ExpenseBuilder, Expense> {
-
-    @Override
-    protected Expense newTransaction() {
-      return new Expense(this);
-    }
-  }
 }
