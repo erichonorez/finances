@@ -12,15 +12,15 @@ import java.util.Set;
  */
 public interface AccountService {
 
-  Set<Account> getAllAccounts();
+  Set<AccountSummary> getAllAccounts();
 
-  Account execute(CreateAccountCommand command);
+  String execute(CreateAccountCommand command);
 
   void execute(AddIncomeCommand command) throws AccountNotFoundException;
 
   void execute(AddExpenseCommand command) throws AccountNotFoundException;
 
-  Account execute(UpdateAccountDescriptionCommand command)
+  void execute(UpdateAccountDescriptionCommand command)
     throws AccountNotFoundException;
 
   List<Transaction> getTransactions(String accountId, int page, int size)

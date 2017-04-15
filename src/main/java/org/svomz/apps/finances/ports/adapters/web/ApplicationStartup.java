@@ -26,7 +26,7 @@ public class ApplicationStartup
   @Override
   public void onApplicationEvent(final ApplicationReadyEvent event) {
 
-    Account account = this.accountService
+    String accountId = this.accountService
       .execute(new CreateAccountCommand(
         "First Account"
       ));
@@ -34,7 +34,7 @@ public class ApplicationStartup
     try {
       this.accountService
         .execute(new AddExpenseCommand(
-          account.getAccountId().getId(),
+          accountId,
           10.02,
           LocalDateTime.now(),
           "First"

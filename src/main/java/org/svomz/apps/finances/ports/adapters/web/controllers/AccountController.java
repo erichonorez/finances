@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.svomz.apps.finances.application.AccountNotFoundException;
 import org.svomz.apps.finances.application.AccountService;
+import org.svomz.apps.finances.application.AccountSummary;
 import org.svomz.apps.finances.application.CreateAccountCommand;
 import org.svomz.apps.finances.application.UpdateAccountDescriptionCommand;
 import org.svomz.apps.finances.domain.model.Account;
@@ -36,7 +37,7 @@ public class AccountController {
     "/accounts"
   })
   public String index(Model model) {
-    Set<Account> accounts = this.accountService.getAllAccounts();
+    Set<AccountSummary> accounts = this.accountService.getAllAccounts();
     model.addAttribute("accounts", accounts);
     return "account/index";
   }
@@ -72,10 +73,10 @@ public class AccountController {
       return "account/new";
     }
 
-    Account account = this.accountService.execute(
+    String accountId = this.accountService.execute(
       new CreateAccountCommand(form.getDescription())
     );
-    return "redirect:/accounts/" + account.getAccountId().getId();
+    return "redirect:/accounts/" + accountId;
   }
 
   @RequestMapping(path = "/accounts/{accountId}/update", method = RequestMethod.POST)
@@ -86,9 +87,9 @@ public class AccountController {
       return "account/edit";
     }
 
-    Account account = this.accountService.execute(
+    this.accountService.execute(
       new UpdateAccountDescriptionCommand(accountId, form.getDescription()));
-    return "redirect:/accounts/" + account.getAccountId().getId();
+    return "redirect:/accounts/" + accountId;
   }
 
 }

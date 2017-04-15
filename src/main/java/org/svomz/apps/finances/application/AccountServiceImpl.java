@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -38,18 +39,27 @@ public class AccountServiceImpl implements AccountService {
 
   @Override
   @Transactional
-  public Account execute(CreateAccountCommand command) {
+  public String execute(CreateAccountCommand command) {
     Preconditions.checkNotNull(command);
 
     AccountId accountId = this.accountRepository.nextIdentity();
     Account account = new Account(accountId, command.getAccountDescription());
     this.accountRepository.create(account);
-    return account;
+
+    return account.getAccountId().getId();
   }
 
   @Override
-  public Set<Account> getAllAccounts() {
-    return new HashSet<>(this.accountRepository.findAll());
+  public Set<AccountSummary> getAllAccounts() {
+    return this.accountRepository.findAll().stream()
+      .map((account) -> {
+        BigDecimal balance = Accounts.balance(account).apply(transactionRepository);
+        return new AccountSummary(
+          account.getAccountId().getId(),
+          account.getDescription(),
+          balance);
+      }).collect(Collectors.toSet());
+
   }
 
   @Override
@@ -114,12 +124,11 @@ public class AccountServiceImpl implements AccountService {
 
   @Override
   @Transactional
-  public Account execute(UpdateAccountDescriptionCommand command)
+  public void execute(UpdateAccountDescriptionCommand command)
     throws AccountNotFoundException {
     Preconditions.checkNotNull(command);
 
     Account account = this.getAccount(command.getAccountId());
     account.setDescription(command.getDescription());
-    return account;
   }
 }
