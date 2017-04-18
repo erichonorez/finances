@@ -7,7 +7,7 @@
         <div layout:fragment="content">
             <h2>New transaction</h2>
 
-            <form method="post" th:action="@{'/accounts/' + ${account.accountId.id} + '/transactions/create' }" th:object="${transactionForm}">
+            <form method="post" th:action="@{'/accounts/' + ${account.getAccountId()} + '/transactions/create' }" th:object="${transactionForm}">
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('type')} ? has-error">
                     <div class="radio" th:each="transactionType : ${T(org.svomz.apps.finances.ports.adapters.web.controllers.TransactionType).values()}">

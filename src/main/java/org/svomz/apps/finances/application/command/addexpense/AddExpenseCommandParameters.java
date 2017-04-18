@@ -1,17 +1,17 @@
-package org.svomz.apps.finances.application;
+package org.svomz.apps.finances.application.command.addexpense;
 
   import com.google.common.base.Preconditions;
 
   import java.time.LocalDateTime;
 
-public class AddExpenseCommand {
+public class AddExpenseCommandParameters {
 
   private final String id;
   private final double value;
   private final LocalDateTime dateTime;
   private final String description;
 
-  public AddExpenseCommand(String id, double value, LocalDateTime dateTime, String description) {
+  public AddExpenseCommandParameters(String id, double value, LocalDateTime dateTime, String description) {
     this.id = Preconditions.checkNotNull(id);
     this.value = value;
     this.dateTime = Preconditions.checkNotNull(dateTime);

@@ -4,10 +4,6 @@ import com.google.common.base.Preconditions;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.Id;
-
 /**
  * Created by eric on 28/02/16.
  */

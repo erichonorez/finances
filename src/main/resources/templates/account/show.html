@@ -6,9 +6,9 @@
     </head>
     <body>
     <div layout:fragment="content">
-            <h2><a th:href="@{/accounts}">Accounts</a> - <span th:text="${account.description}"></span> <a th:href="@{'/accounts/'+ ${account.accountId.id} +'/edit'}"><span class="glyphicon glyphicon-pencil account-edit-btn" aria-hidden="true"></span></a></h2>
-            <p><strong>Actual balance:</strong> <span th:text="${balance}" th:class="${#financesUtils.cssClassesOf(balance)}"></span></p>
-            <h3>Transactions <a th:href="@{'/accounts/' + ${account.accountId.id} + '/transactions/new'}" class="btn btn-success pull-right">Add</a></h3>
+            <h2><a th:href="@{/accounts}">Accounts</a> - <span th:text="${account.description}"></span> <a th:href="@{'/accounts/'+ ${account.getAccountId()} +'/edit'}"><span class="glyphicon glyphicon-pencil account-edit-btn" aria-hidden="true"></span></a></h2>
+            <p><strong>Actual balance:</strong> <span th:text="${balance}" th:class="${#financesUtils.cssClassesOf(account.getBalance())}"></span></p>
+            <h3>Transactions <a th:href="@{'/accounts/' + ${account.getAccountId()} + '/transactions/new'}" class="btn btn-success pull-right">Add</a></h3>
 
             <table class="table table-over transactions transactions-table">
                 <thead>
