@@ -1,5 +1,7 @@
 package org.svomz.apps.finances.ports.adapters.persistence.mongo;
 
+import static com.mongodb.client.model.Filters.*;
+
 import com.google.common.base.Preconditions;
 
 import com.mongodb.MongoClient;
@@ -55,7 +57,7 @@ public class MongoTransactionRepository implements TransactionRepository {
   @Override
   public List<Transaction> findByAccountId(AccountId accountId, int page, int size) {
     MongoCursor<Document> cursor = this.mongoDatabase.getCollection("transactions")
-      .find()
+      .find(eq("accountId", accountId.getId()))
       .sort(descending("date"))
       .limit(size)
       .skip((page - 1)* size)
@@ -73,7 +75,7 @@ public class MongoTransactionRepository implements TransactionRepository {
   @Override
   public List<Transaction> findAllByAccountId(AccountId accountId) {
     MongoCursor<Document> cursor = this.mongoDatabase.getCollection("transactions")
-      .find().iterator();
+      .find(eq("accountId", accountId.getId())).iterator();
 
     List<Transaction> results = new ArrayList<>();
     while (cursor.hasNext()) {
