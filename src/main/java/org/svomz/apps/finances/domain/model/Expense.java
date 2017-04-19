@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
  */
 public final class Expense extends Transaction {
 
-  Expense(TransactionId transactionId, AccountId accountId, final BigDecimal value, final LocalDateTime date,
+  public Expense(TransactionId transactionId, AccountId accountId, final BigDecimal value, final LocalDateTime date,
     final String description) {
     super(transactionId, accountId, value, date, description);
   }

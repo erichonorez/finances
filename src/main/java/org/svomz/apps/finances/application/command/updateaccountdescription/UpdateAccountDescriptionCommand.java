@@ -36,6 +36,8 @@ public class UpdateAccountDescriptionCommand {
       .orElseThrow(() -> new AccountNotFoundException(accountId));
 
     account.setDescription(command.getDescription());
+
+    this.accountRepository.update(account);
   }
 
 }

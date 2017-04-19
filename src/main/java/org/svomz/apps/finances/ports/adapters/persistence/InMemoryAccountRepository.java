@@ -15,7 +15,6 @@ import java.util.UUID;
 /**
  * Created by eric on 28/02/16.
  */
-@Component
 public class InMemoryAccountRepository implements AccountRepository {
 
   private List<Account> accounts = new ArrayList<>();
@@ -24,6 +23,12 @@ public class InMemoryAccountRepository implements AccountRepository {
   public Account create(Account account) {
     this.accounts.add(account);
     return account;
+  }
+
+  @Override
+  public void update(Account account) {
+    this.accounts.remove(account);
+    this.accounts.add(account);
   }
 
   @Override

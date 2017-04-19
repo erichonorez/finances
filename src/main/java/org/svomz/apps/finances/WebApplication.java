@@ -1,5 +1,7 @@
 package org.svomz.apps.finances;
 
+import com.mongodb.MongoClient;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -30,4 +32,8 @@ public class WebApplication {
     return new FinancesDialect();
   }
 
+  @Bean
+  public MongoClient mongoClient() {
+    return new MongoClient();
+  }
 }

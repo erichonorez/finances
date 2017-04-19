@@ -16,7 +16,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Component
 public class InMemoryTransactionRepository implements TransactionRepository {
 
   private Map<AccountId, Set<Transaction>> transactionMap = new HashMap<>();

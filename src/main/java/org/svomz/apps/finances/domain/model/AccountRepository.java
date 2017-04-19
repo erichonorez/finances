@@ -15,4 +15,6 @@ public interface AccountRepository {
   AccountId nextIdentity();
 
   Account create(Account account);
+
+  void update(Account account);
 }

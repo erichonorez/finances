@@ -2,6 +2,8 @@ package org.svomz.apps.finances.domain.model;
 
 import com.google.common.base.Preconditions;
 
+import com.mongodb.BulkWriteUpsert;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -18,6 +20,8 @@ public abstract class Transaction {
 
   private final LocalDateTime date;
 
+  private final TransactionId transactionId;
+
   Transaction(TransactionId transactionId, AccountId accountId, final BigDecimal amount, final LocalDateTime date,
     final String description) {
     Preconditions.checkNotNull(transactionId);
@@ -28,6 +32,7 @@ public abstract class Transaction {
     this.amount = amount.abs();
     this.date = date;
     this.description = description;
+    this.transactionId = transactionId;
   }
 
   public abstract BigDecimal value();
@@ -48,5 +53,9 @@ public abstract class Transaction {
 
   public BigDecimal getAmount() {
     return amount;
+  }
+
+  public TransactionId getTransactionId() {
+    return this.transactionId;
   }
 }
