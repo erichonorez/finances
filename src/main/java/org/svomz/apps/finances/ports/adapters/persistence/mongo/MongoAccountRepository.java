@@ -78,7 +78,7 @@ public class MongoAccountRepository implements AccountRepository {
   @Override
   public void update(Account account) {
     this.mongoDatabase.getCollection("accounts")
-      .findOneAndUpdate(eq("accountId", account.getAccountId().getId()), this.map(account));
+      .updateOne(eq("accountId", account.getAccountId().getId()), new Document("$set", this.map(account)));
   }
 
   private Account map(Document next) {

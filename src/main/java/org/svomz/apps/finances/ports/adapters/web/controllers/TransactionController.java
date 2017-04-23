@@ -11,15 +11,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.svomz.apps.finances.application.AccountNotFoundException;
+import org.svomz.apps.finances.application.TransactionNotFoundException;
 import org.svomz.apps.finances.application.command.addexpense.AddExpenseCommand;
 import org.svomz.apps.finances.application.command.addincome.AddIncomeCommand;
+import org.svomz.apps.finances.application.command.deletetransaction.DeleteTransactionCommand;
+import org.svomz.apps.finances.application.command.edittransaction.EditTransactionCommand;
 import org.svomz.apps.finances.application.query.accountsummary.AccountSummaryView;
 import org.svomz.apps.finances.application.command.addexpense.AddExpenseCommandParameters;
 import org.svomz.apps.finances.application.command.addincome.AddIncomeCommandParameters;
 import org.svomz.apps.finances.application.query.accountsummary.AccountSummaryQuery;
+import org.svomz.apps.finances.application.query.gettransaction.GetTransactionQuery;
+import org.svomz.apps.finances.domain.model.Transaction;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Date;
 import java.util.stream.IntStream;
 
 import javax.inject.Inject;
@@ -33,16 +40,25 @@ import javax.validation.Valid;
 public class TransactionController {
 
   private final AccountSummaryQuery accountSummaryQuery;
+  private final GetTransactionQuery getTransactionQuery;
+  private final EditTransactionCommand editTransactionCommand;
   private final AddExpenseCommand addExpenseCommand;
   private final AddIncomeCommand addIncomeCommand;
+  private final DeleteTransactionCommand deleteTransactionCommand;
 
   @Inject
   public TransactionController(final AccountSummaryQuery accountSummaryQuery,
     final AddExpenseCommand addExpenseCommand,
-    final AddIncomeCommand addIncomeCommand) {
+    final AddIncomeCommand addIncomeCommand,
+    final GetTransactionQuery getTransactionQuery,
+    final EditTransactionCommand editTransactionCommand,
+    DeleteTransactionCommand deleteTransactionCommand) {
     this.addExpenseCommand = Preconditions.checkNotNull(addExpenseCommand);
     this.addIncomeCommand = Preconditions.checkNotNull(addIncomeCommand);
     this.accountSummaryQuery = Preconditions.checkNotNull(accountSummaryQuery);
+    this.getTransactionQuery = Preconditions.checkNotNull(getTransactionQuery);
+    this.editTransactionCommand = Preconditions.checkNotNull(editTransactionCommand);
+    this.deleteTransactionCommand = Preconditions.checkNotNull(deleteTransactionCommand);
   }
 
   @RequestMapping(path = "/new", method = RequestMethod.GET)
@@ -119,4 +135,64 @@ public class TransactionController {
     return "redirect:/accounts/" + accountId;
   }
 
+  @RequestMapping(path = "/{transactionId}/edit", method = RequestMethod.GET)
+  private String edit(@RequestHeader(value = "referer", required = false) final String referer, @PathVariable final String accountId, @PathVariable final String transactionId, Model model)
+    throws TransactionNotFoundException {
+
+    Transaction transaction = this.getTransactionQuery.execute(accountId, transactionId);
+
+    TransactionForm form = new TransactionForm();
+    form.setAmount(transaction.getAmount().doubleValue());
+    form.setDate(Date.from(transaction.getDate().atZone(ZoneId.systemDefault()).toInstant()));
+    form.setDescription(transaction.getDescription());
+    form.setType(transaction.value().compareTo(BigDecimal.ZERO) < 0 ? TransactionType.EXPENSE : TransactionType.INCOME);
+
+    model.addAttribute("transactionForm", form)
+     .addAttribute("referer", referer)
+     .addAttribute("transactionId", transaction.getTransactionId().getId())
+     .addAttribute("accountId", transaction.getAccountId().getId());
+
+    return "transaction/edit";
+  }
+
+  @RequestMapping(path = "/{transactionId}/update", method = RequestMethod.POST)
+  private String update(@PathVariable final String accountId, @PathVariable final String transactionId,
+    @Valid TransactionForm form, BindingResult bindingResult, Model model)
+    throws TransactionNotFoundException {
+
+    if (bindingResult.hasErrors()) {
+      model.addAttribute("transactionForm", form)
+        .addAttribute("transactionId", transactionId)
+        .addAttribute("accountId", accountId);
+
+      return "transaction/edit";
+    }
+
+    this.editTransactionCommand.execute(
+      accountId,
+      transactionId,
+      BigDecimal.valueOf(form.getAmount()),
+      LocalDateTime.ofInstant(form.getDate().toInstant(), ZoneId.systemDefault()),
+      form.getDescription()
+    );
+
+    return "redirect:/accounts/" + accountId;
+  }
+
+  @RequestMapping(path = "/{transactionId}/remove", method = RequestMethod.GET)
+  public String remove(@RequestHeader(value = "referer", required = false) final String referer, @PathVariable final String accountId, @PathVariable final String transactionId, Model model) {
+    model.addAttribute("accountId", accountId)
+      .addAttribute("transactionId", transactionId)
+      .addAttribute("referer", referer);
+
+    return "transaction/remove";
+  }
+
+  @RequestMapping(path = "/{transactionId}/delete", method = RequestMethod.POST)
+  public String delete(@PathVariable final String accountId, @PathVariable final String transactionId)
+    throws TransactionNotFoundException {
+    this.deleteTransactionCommand.execute(accountId, transactionId);
+
+    return "redirect:/accounts/" + accountId;
+  }
 }

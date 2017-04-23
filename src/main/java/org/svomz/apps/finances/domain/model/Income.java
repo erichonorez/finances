@@ -23,6 +23,16 @@ public final class Income extends Transaction {
     return balance.add(this.value());
   }
 
+  @Override
+  public boolean isIncome() {
+    return true;
+  }
+
+  @Override
+  public boolean isExpense() {
+    return false;
+  }
+
   public BigDecimal value() {
     return this.getAmount();
   }

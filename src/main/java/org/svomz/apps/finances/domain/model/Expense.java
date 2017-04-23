@@ -22,6 +22,16 @@ public final class Expense extends Transaction {
     return balance.subtract(this.value());
   }
 
+  @Override
+  public boolean isIncome() {
+    return false;
+  }
+
+  @Override
+  public boolean isExpense() {
+    return true;
+  }
+
   public BigDecimal value() {
     return this.getAmount().negate();
   }

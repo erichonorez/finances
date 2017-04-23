@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -54,5 +55,20 @@ public class InMemoryTransactionRepository implements TransactionRepository {
     }
 
     return this.transactionMap.get(accountId).stream().collect(Collectors.toList());
+  }
+
+  @Override
+  public Optional<Transaction> findById(AccountId accountId, TransactionId transactionId) {
+    return null;
+  }
+
+  @Override
+  public void update(Transaction transaction) {
+
+  }
+
+  @Override
+  public void delete(Transaction transaction) {
+
   }
 }

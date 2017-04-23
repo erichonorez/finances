@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorator="layout">
+<head>
+    <title>New</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h2>Edit transaction</h2>
+
+    <form method="post" th:action="@{'/accounts/' + ${accountId} + '/transactions/' + ${transactionId}  + '/update' }"
+          th:object="${transactionForm}"
+          th:include="transaction/partials/form :: content">
+
+    </form>
+</div>
+</body>
+</html>

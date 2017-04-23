@@ -23,6 +23,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.inject.Inject;
@@ -84,6 +85,30 @@ public class MongoTransactionRepository implements TransactionRepository {
 
     cursor.close();
     return results;
+  }
+
+  @Override
+  public Optional<Transaction> findById(AccountId accountId, TransactionId transactionId) {
+    Document document = this.mongoDatabase.getCollection("transactions")
+      .find(and(eq("accountId", accountId.getId()), eq("transactionId", transactionId.getId()))).first();
+
+    if (document == null) {
+      return Optional.empty();
+    }
+
+    return Optional.of(this.map(document));
+  }
+
+  @Override
+  public void update(Transaction transaction) {
+    this.mongoDatabase.getCollection("transactions").updateOne(
+      eq("transactionId", transaction.getTransactionId().getId()), new Document("$set", this.map(transaction)));
+  }
+
+  @Override
+  public void delete(Transaction transaction) {
+    this.mongoDatabase.getCollection("transactions")
+      .deleteOne(eq("transactionId", transaction.getTransactionId().getId()));
   }
 
   private Transaction map(Document next) {

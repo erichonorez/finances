@@ -14,11 +14,11 @@ public abstract class Transaction {
 
   private final AccountId accountId;
 
-  private final BigDecimal amount;
+  private BigDecimal amount;
 
-  private final String description;
+  private String description;
 
-  private final LocalDateTime date;
+  private LocalDateTime date;
 
   private final TransactionId transactionId;
 
@@ -58,4 +58,20 @@ public abstract class Transaction {
   public TransactionId getTransactionId() {
     return this.transactionId;
   }
+
+  public void setAmount(BigDecimal amount) {
+    this.amount = amount;
+  }
+
+  public void setDate(LocalDateTime date) {
+    this.date = date;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public abstract boolean isIncome();
+
+  public abstract boolean isExpense();
 }
