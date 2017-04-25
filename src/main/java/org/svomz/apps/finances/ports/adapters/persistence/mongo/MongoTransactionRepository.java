@@ -115,6 +115,25 @@ public class MongoTransactionRepository implements TransactionRepository {
       .deleteOne(eq("transactionId", transaction.getTransactionId().getId()));
   }
 
+  @Override
+  public List<Transaction> findAllByTag(AccountId accountId, Tag tag) {
+    MongoCursor<Document> cursor = this.mongoDatabase.getCollection("transactions")
+      .find(
+        and(
+          eq("accountId", accountId.getId()),
+          eq("tags", tag.getName())
+        )
+      ).iterator();
+
+    List<Transaction> results = new ArrayList<>();
+    while (cursor.hasNext()) {
+      results.add(this.map(cursor.next()));
+    }
+
+    cursor.close();
+    return results;
+  }
+
   private Transaction map(Document next) {
     double amount = next.getDouble("amount");
     TransactionId transactionId = new TransactionId(next.getString("transactionId"));

@@ -27,7 +27,7 @@
                         <td>
                             <ul class="list-inline">
                                 <li th:each="tag : ${transaction.getTags()}">
-                                    <span class="label label-default" th:text="${tag}"></span>
+                                    <a th:href="@{'/accounts/'+ ${account.getAccountId()} +'/tags/' + ${tag} }"><span class="label label-primary" th:text="${tag}"></span></a>
                                 </li>
                             </ul>
                         </td>

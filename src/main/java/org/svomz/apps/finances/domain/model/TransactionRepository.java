@@ -21,4 +21,6 @@ public interface TransactionRepository {
   void update(Transaction transaction);
 
   void delete(Transaction transaction);
+
+  List<Transaction> findAllByTag(AccountId accountId, Tag tag);
 }

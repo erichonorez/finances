@@ -30,7 +30,7 @@
 
         <div class="form-group" th:classappend="${#fields.hasErrors('amount')} ? has-error">
             <label for="description" class="control-label">Amount</label>
-            <input type="text" class="form-control" id="amount" name="value" placeholder="10.02"
+            <input type="text" class="form-control" id="amount" name="amount" placeholder="10.02"
                    th:value="*{amount}" />
             <ul th:if="${#fields.hasErrors('amount')}" class="has-error">
                 <li th:each="err : ${#fields.errors('amount')}" th:text="${err}" />

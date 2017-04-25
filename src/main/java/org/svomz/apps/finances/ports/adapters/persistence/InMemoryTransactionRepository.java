@@ -3,6 +3,7 @@ package org.svomz.apps.finances.ports.adapters.persistence;
 import org.springframework.stereotype.Component;
 import org.svomz.apps.finances.domain.model.Account;
 import org.svomz.apps.finances.domain.model.AccountId;
+import org.svomz.apps.finances.domain.model.Tag;
 import org.svomz.apps.finances.domain.model.Transaction;
 import org.svomz.apps.finances.domain.model.TransactionId;
 import org.svomz.apps.finances.domain.model.TransactionRepository;
@@ -70,5 +71,10 @@ public class InMemoryTransactionRepository implements TransactionRepository {
   @Override
   public void delete(Transaction transaction) {
 
+  }
+
+  @Override
+  public List<Transaction> findAllByTag(AccountId accountId, Tag tag) {
+    return null;
   }
 }

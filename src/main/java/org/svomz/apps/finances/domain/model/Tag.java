@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
  */
 public class Tag {
 
-  private static final String validNamePattern = "[a-zA-Z0-9]+";
+  private static final String validNamePattern = "[a-zA-Z0-9-]+";
 
   private final String name;
 
