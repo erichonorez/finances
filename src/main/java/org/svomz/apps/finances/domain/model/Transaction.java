@@ -6,6 +6,8 @@ import com.mongodb.BulkWriteUpsert;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by eric on 28/02/16.
@@ -13,6 +15,7 @@ import java.time.LocalDateTime;
 public abstract class Transaction {
 
   private final AccountId accountId;
+  private Set<Tag> tags;
 
   private BigDecimal amount;
 
@@ -23,16 +26,18 @@ public abstract class Transaction {
   private final TransactionId transactionId;
 
   Transaction(TransactionId transactionId, AccountId accountId, final BigDecimal amount, final LocalDateTime date,
-    final String description) {
+    final String description, final Set<Tag> tags) {
     Preconditions.checkNotNull(transactionId);
     Preconditions.checkNotNull(accountId);
     Preconditions.checkNotNull(amount);
+    Preconditions.checkNotNull(tags);
 
     this.accountId = accountId;
     this.amount = amount.abs();
     this.date = date;
     this.description = description;
     this.transactionId = transactionId;
+    this.tags = new HashSet<>(tags);
   }
 
   public abstract BigDecimal value();
@@ -74,4 +79,12 @@ public abstract class Transaction {
   public abstract boolean isIncome();
 
   public abstract boolean isExpense();
+
+  public Set<Tag> getTags() {
+    return tags;
+  }
+
+  public void setTags(Set<Tag> tags) {
+    this.tags = new HashSet<>(tags);
+  }
 }

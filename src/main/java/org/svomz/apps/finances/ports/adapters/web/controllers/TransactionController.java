@@ -26,7 +26,9 @@ import org.svomz.apps.finances.domain.model.Transaction;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import javax.inject.Inject;
@@ -39,6 +41,7 @@ import javax.validation.Valid;
 @RequestMapping("/accounts/{accountId}/transactions")
 public class TransactionController {
 
+  public static final String TAG_SEPARATOR_CHAR = " ";
   private final AccountSummaryQuery accountSummaryQuery;
   private final GetTransactionQuery getTransactionQuery;
   private final EditTransactionCommand editTransactionCommand;
@@ -85,7 +88,8 @@ public class TransactionController {
           accountId,
           transactionForm.getAmount(),
           LocalDateTime.ofInstant(transactionForm.getDate().toInstant(), ZoneId.systemDefault()),
-          transactionForm.getDescription()
+          transactionForm.getDescription(),
+          Arrays.asList(transactionForm.getTags().split(TAG_SEPARATOR_CHAR))
         );
         this.addExpenseCommand.execute(command);
         break;
@@ -94,7 +98,8 @@ public class TransactionController {
           accountId,
           transactionForm.getAmount(),
           LocalDateTime.ofInstant(transactionForm.getDate().toInstant(), ZoneId.systemDefault()),
-          transactionForm.getDescription()
+          transactionForm.getDescription(),
+          Arrays.asList(transactionForm.getTags().split(TAG_SEPARATOR_CHAR))
         );
         this.addIncomeCommand.execute(incomeCommand);
         break;
@@ -146,6 +151,8 @@ public class TransactionController {
     form.setDate(Date.from(transaction.getDate().atZone(ZoneId.systemDefault()).toInstant()));
     form.setDescription(transaction.getDescription());
     form.setType(transaction.value().compareTo(BigDecimal.ZERO) < 0 ? TransactionType.EXPENSE : TransactionType.INCOME);
+    form.setTags(String.join(TAG_SEPARATOR_CHAR, transaction.getTags().stream().map(t -> t.getName()).collect(
+      Collectors.toList())));
 
     model.addAttribute("transactionForm", form)
      .addAttribute("referer", referer)
@@ -173,7 +180,8 @@ public class TransactionController {
       transactionId,
       BigDecimal.valueOf(form.getAmount()),
       LocalDateTime.ofInstant(form.getDate().toInstant(), ZoneId.systemDefault()),
-      form.getDescription()
+      form.getDescription(),
+      Arrays.asList(form.getTags().split(TAG_SEPARATOR_CHAR))
     );
 
     return "redirect:/accounts/" + accountId;

@@ -2,7 +2,9 @@ package org.svomz.apps.finances.domain.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Created by eric on 15/04/17.
@@ -17,14 +19,15 @@ public class Accounts {
    * @param description
    * @return
    */
-  public static Function<TransactionRepository, Income> addIncome(Account account, BigDecimal amount, LocalDateTime occuredOn, String description) {
+  public static Function<TransactionRepository, Income> addIncome(Account account, BigDecimal amount, LocalDateTime occuredOn, String description, List<String> tags) {
     return (TransactionRepository transactionRepository) -> {
       Income income = new Income(
         transactionRepository.nextIdentity(),
         account.getAccountId(),
         amount,
         occuredOn,
-        description
+        description,
+        tags.stream().map(v -> new Tag(v)).collect(Collectors.toSet())
       );
 
       transactionRepository.create(income);
@@ -34,14 +37,15 @@ public class Accounts {
 
   }
 
-  public static Function<TransactionRepository, Expense> addExpense(Account account, BigDecimal amount, LocalDateTime occuredOn, String description) {
+  public static Function<TransactionRepository, Expense> addExpense(Account account, BigDecimal amount, LocalDateTime occuredOn, String description, List<String> tags) {
     return (TransactionRepository transactionRepository) -> {
       Expense expense = new Expense(
         transactionRepository.nextIdentity(),
         account.getAccountId(),
         amount,
         occuredOn,
-        description
+        description,
+        tags.stream().map(v -> new Tag(v)).collect(Collectors.toSet())
       );
 
       transactionRepository.create(expense);

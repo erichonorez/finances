@@ -10,6 +10,7 @@ import org.svomz.apps.finances.domain.model.Transaction;
 import org.svomz.apps.finances.domain.model.TransactionRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -28,13 +29,22 @@ public class ListTransactionsQuery {
     this.transactionRepository = Preconditions.checkNotNull(transactionRepository);
   }
 
-  public List<Transaction> execute(String accountId, int page, int size) throws AccountNotFoundException {
+  public List<TransactionView> execute(String accountId, int page, int size) throws AccountNotFoundException {
     Preconditions.checkNotNull(accountId);
 
     Account account = this.accountRepository.find(accountId)
       .orElseThrow(() -> new AccountNotFoundException(accountId));
 
-    return this.transactionRepository.findByAccountId(account.getAccountId(), page, size);
+    return this.transactionRepository.findByAccountId(account.getAccountId(), page, size)
+      .stream()
+      .map(t -> {
+        return new TransactionView(t.getAccountId().getId(),
+          t.getTags().stream().map(v -> v.getName()).collect(Collectors.toList()),
+          t.value(),
+          t.getDescription(),
+          t.getDate(),
+          t.getTransactionId().getId());
+      }).collect(Collectors.toList());
   }
 
 }

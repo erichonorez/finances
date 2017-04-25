@@ -21,13 +21,4 @@ public class FinancesUtils {
     return "negative-amount";
   }
 
-  public String cssClassesOf(final Transaction transaction) {
-    Preconditions.checkNotNull(transaction);
-
-    if (transaction instanceof Expense) {
-      return "transaction expense negative-amount";
-    }
-    return "transaction income positive-amount";
-  }
-
 }

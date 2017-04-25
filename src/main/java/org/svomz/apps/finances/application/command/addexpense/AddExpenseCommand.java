@@ -43,7 +43,8 @@ public class AddExpenseCommand {
       account,
       BigDecimal.valueOf(command.getValue()),
       command.getDateTime(),
-      command.getDescription()
+      command.getDescription(),
+      command.getTags()
     ).apply(this.transactionRepository);
 
   }

@@ -30,6 +30,8 @@ public class TransactionForm {
   @Min(0)
   private Double amount;
 
+  private String tags;
+
   public String getDescription() {
     return description;
   }
@@ -62,4 +64,11 @@ public class TransactionForm {
     this.amount = amount;
   }
 
+  public String getTags() {
+    return tags;
+  }
+
+  public void setTags(String tags) {
+    this.tags = tags;
+  }
 }

@@ -30,7 +30,7 @@
 
         <div class="form-group" th:classappend="${#fields.hasErrors('amount')} ? has-error">
             <label for="description" class="control-label">Amount</label>
-            <input type="text" class="form-control" id="amount" name="amount" placeholder="10.02"
+            <input type="text" class="form-control" id="amount" name="value" placeholder="10.02"
                    th:value="*{amount}" />
             <ul th:if="${#fields.hasErrors('amount')}" class="has-error">
                 <li th:each="err : ${#fields.errors('amount')}" th:text="${err}" />
@@ -43,6 +43,15 @@
                    th:value="*{date}" th:field="*{date}" />
             <ul th:if="${#fields.hasErrors('date')}" class="has-error">
                 <li th:each="err : ${#fields.errors('date')}" th:text="${err}" />
+            </ul>
+        </div>
+
+        <div class="form-group" th:classappend="${#fields.hasErrors('tags')} ? has-error">
+            <label for="description" class="control-label">Tags</label>
+            <input type="text" class="form-control" id="tags" name="tags" placeholder="Whitespace separated list of tags"
+                   th:value="*{tags}" />
+            <ul th:if="${#fields.hasErrors('tags')}" class="has-error">
+                <li th:each="err : ${#fields.errors('tags')}" th:text="${err}" />
             </ul>
         </div>
 

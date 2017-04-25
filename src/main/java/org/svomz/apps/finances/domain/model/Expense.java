@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 /**
  * Created by eric on 28/02/16.
@@ -11,8 +12,8 @@ import java.time.LocalDateTime;
 public final class Expense extends Transaction {
 
   public Expense(TransactionId transactionId, AccountId accountId, final BigDecimal value, final LocalDateTime date,
-    final String description) {
-    super(transactionId, accountId, value, date, description);
+    final String description, final Set<Tag> tags) {
+    super(transactionId, accountId, value, date, description, tags);
   }
 
   @Override

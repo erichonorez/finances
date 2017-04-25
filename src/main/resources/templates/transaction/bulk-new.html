@@ -13,7 +13,7 @@
             <tr>
                 <th class="transactions-table-type">Type</th>
                 <th class="transactions-table-date">Date</th>
-                <th class="transactions-table-amount">Amount</th>
+                <th class="transactions-table-value">Amount</th>
                 <th class="transactions-table-description">Description</th>
             </tr>
             </thead>
@@ -36,11 +36,11 @@
                             <li th:each="err : ${#fields.errors('transactions[__${stat.index}__].date')}" th:text="${err}" />
                         </ul>
                     </td>
-                    <td th:classappend="${#fields.hasErrors('transactions[__${stat.index}__].amount')} ? has-error">
+                    <td th:classappend="${#fields.hasErrors('transactions[__${stat.index}__].value')} ? has-error">
                         <input type="text" class="form-control" placeholder="10.02"
-                               th:field="*{transactions[__${stat.index}__].amount}" />
-                        <ul th:if="${#fields.hasErrors('transactions[__${stat.index}__].amount')}" class="has-error">
-                            <li th:each="err : ${#fields.errors('transactions[__${stat.index}__].amount')}" th:text="${err}" />
+                               th:field="*{transactions[__${stat.index}__].value}" />
+                        <ul th:if="${#fields.hasErrors('transactions[__${stat.index}__].value')}" class="has-error">
+                            <li th:each="err : ${#fields.errors('transactions[__${stat.index}__].value')}" th:text="${err}" />
                         </ul>
                     </td>
                     <td th:classappend="${#fields.hasErrors('transactions[__${stat.index}__].description')} ? has-error">

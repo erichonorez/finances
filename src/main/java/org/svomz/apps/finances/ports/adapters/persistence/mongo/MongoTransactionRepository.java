@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.svomz.apps.finances.domain.model.AccountId;
 import org.svomz.apps.finances.domain.model.Expense;
 import org.svomz.apps.finances.domain.model.Income;
+import org.svomz.apps.finances.domain.model.Tag;
 import org.svomz.apps.finances.domain.model.Transaction;
 import org.svomz.apps.finances.domain.model.TransactionId;
 import org.svomz.apps.finances.domain.model.TransactionRepository;
@@ -22,9 +23,12 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -113,21 +117,35 @@ public class MongoTransactionRepository implements TransactionRepository {
 
   private Transaction map(Document next) {
     double amount = next.getDouble("amount");
+    TransactionId transactionId = new TransactionId(next.getString("transactionId"));
+    AccountId accountId = new AccountId(next.getString("accountId"));
+    BigDecimal value = BigDecimal.valueOf(amount);
+    LocalDateTime date =
+      LocalDateTime.ofInstant(next.getDate("date").toInstant(), ZoneId.systemDefault());
+    String description = next.getString("description");
+
+    Set<Tag> tags = new HashSet<>();
+    if (next.get("tags") != null) {
+      tags = ((List<String>) next.get("tags")).stream().map(s -> new Tag(s)).collect(Collectors.toSet());
+    }
+
     if (amount < 0) {
       return new Expense(
-        new TransactionId(next.getString("transactionId")),
-        new AccountId(next.getString("accountId")),
-        BigDecimal.valueOf(amount),
-        LocalDateTime.ofInstant(next.getDate("date").toInstant(), ZoneId.systemDefault()),
-        next.getString("description")
+        transactionId,
+        accountId,
+        value,
+        date,
+        description,
+        tags
       );
     }
     return new Income(
-      new TransactionId(next.getString("transactionId")),
-      new AccountId(next.getString("accountId")),
-      BigDecimal.valueOf(amount),
-      LocalDateTime.ofInstant(next.getDate("date").toInstant(), ZoneId.systemDefault()),
-      next.getString("description")
+      transactionId,
+      accountId,
+      value,
+      date,
+      description,
+      tags
     );
   }
 
@@ -136,6 +154,7 @@ public class MongoTransactionRepository implements TransactionRepository {
       .append("accountId", expense.getAccountId().getId())
       .append("amount", expense.value().doubleValue())
       .append("date", Date.from(expense.getDate().atZone(ZoneId.systemDefault()).toInstant()))
-      .append("description", expense.getDescription());
+      .append("description", expense.getDescription())
+      .append("tags", expense.getTags().stream().map(t -> t.getName()).collect(Collectors.toList()));
   }
 }
