@@ -21,14 +21,17 @@ public class TransactionView {
 
   private final String transactionId;
 
+  private final BigDecimal balance;
+
   public TransactionView(String accountId, List<String> tags, BigDecimal value, String description,
-    LocalDateTime date, String transactionId) {
+    LocalDateTime date, String transactionId, BigDecimal balance) {
     this.accountId = accountId;
     this.tags = tags;
     this.value = value;
     this.description = description;
     this.date = date;
     this.transactionId = transactionId;
+    this.balance = balance;
   }
 
   public String getAccountId() {
@@ -54,4 +57,8 @@ public class TransactionView {
   public String getTransactionId() {
     return transactionId;
   }
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
 }

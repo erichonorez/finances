@@ -1,4 +1,4 @@
-package org.svomz.apps.finances.application.command;
+package org.svomz.apps.finances.application.query;
 
 import com.google.common.base.Preconditions;
 

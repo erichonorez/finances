@@ -8,14 +8,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.svomz.apps.finances.application.AccountNotFoundException;
-import org.svomz.apps.finances.application.command.ListTransactionByTagQuery;
+import org.svomz.apps.finances.application.query.ListTransactionByTagQuery;
 import org.svomz.apps.finances.application.query.accountsummary.AccountSummaryQuery;
 import org.svomz.apps.finances.application.query.listtransactions.TransactionView;
 
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.websocket.server.PathParam;
 
 /**
  * Created by eric on 25/04/17.
