@@ -1,16 +1,19 @@
 package org.svomz.apps.finances.core.domain.model.interpreter
 
-import java.util.Date
+import java.util.{Date, NoSuchElementException}
 
 import org.svomz.apps.finances.core.domain.model._
 
-import scalaz.{-\/, Failure, NonEmptyList, Reader, Success, Validation, \/, \/-}
+import scala.concurrent.Future
+import scalaz.{Failure, Kleisli, NonEmptyList, Reader, Success, Validation}
 import scalaz.syntax.validation._
 import scalaz.syntax.apply._
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class AccountServiceInterpreter extends AccountService[Account, String, BigDecimal, Transaction, AccountRepository[String]] {
+
   override def open(no: String, name: String): AccountOp = {
-    Reader(
+    Kleisli {
       repository => {
         validate(
           Account(
@@ -19,63 +22,87 @@ class AccountServiceInterpreter extends AccountService[Account, String, BigDecim
             List()
           )
         ) match {
-          case Failure(errors) => -\/(new ValidationException(errors))
-          case Success(account) => \/-(
-            repository.persist(
-              account
-            )
+          case Failure(errors) => Future.failed(new ValidationException(errors))
+          case Success(account) => repository.persist(
+            account
           )
         }
 
       }
-    )
+    }
   }
 
   override def credit(no: String, date: Date, amount: BigDecimal, descriptionOption: Option[String]): AccountOp = {
-    Reader(
+    Kleisli {
       repository => {
-        for {
-          account <- existingAccount(no)(repository)
-        } yield repository.persist(
-          account.copy(
-            transactions = Credit(amount.abs, date, descriptionOption) :: account.transactions
+        fetch(no)(repository) flatMap { accountO => accountO match {
+          case None => Future.failed(new NoSuchElementException)
+          case Some(account) => repository.persist(
+            account.copy(
+              transactions = Credit(amount.abs, date, descriptionOption) :: account.transactions
+            )
           )
-        )
+        }}
       }
-    )
+    }
   }
 
   override def debit(no: String, date: Date, amount: BigDecimal, descriptionOption: Option[String]): AccountOp = {
-    Reader(
+    Kleisli {
       repository => {
-        for {
-          account <- existingAccount(no)(repository)
-        } yield repository.persist(
-          account.copy(
-            transactions = Debit(amount.abs, date, descriptionOption) :: account.transactions
+        fetch(no)(repository) flatMap { accountO => accountO match {
+          case None => Future.failed(new NoSuchElementException)
+          case Some(account) => repository.persist(
+            account.copy(
+              transactions = Debit(amount.abs, date, descriptionOption) :: account.transactions
+            )
           )
-        )
+        }}
       }
-    )
+    }
   }
 
-  override def balance(no: String): Reader[AccountRepository[String], \/[Throwable, BigDecimal]] = {
-    Reader(
+  override def balance(no: String): Kleisli[Future, AccountRepository[String], BigDecimal] = {
+    Kleisli {
       repository => {
-        for {
-          account <- existingAccount(no)(repository)
-        } yield account.transactions.foldLeft(BigDecimal.valueOf(0))((left, transaction) => { transaction.apply(left) })
+        transactions(no)(repository) map { transactions =>
+          transactions.foldLeft(BigDecimal.valueOf(0))((left, transaction) => {
+            transaction.apply(left)
+          })
+        }
       }
-    )
+    }
   }
 
 
-  override def transactions(no: String): Reader[AccountRepository[String], \/[Throwable, List[Transaction]]] = {
-    Reader(
+  override def transactions(no: String): Kleisli[Future, AccountRepository[String], List[Transaction]] = {
+    Kleisli {
       repository => {
-        for (account <- existingAccount(no)(repository)) yield { account.transactions }
+        repository.fetch(no) flatMap { accountO => accountO match {
+          case Some(account) => Future {
+            account.transactions
+          }
+          case None => Future.failed(new NoSuchElementException)
+        }
+        }
       }
-    )
+    }
+  }
+
+  override def all: Kleisli[Future, AccountRepository[String], Seq[Account]] = {
+    Kleisli {
+      repository => {
+        repository.all
+      }
+    }
+  }
+
+  override def fetch(id: String): Kleisli[Future, AccountRepository[String], Option[Account]] = {
+    Kleisli {
+      repository => {
+        repository.fetch(id)
+      }
+    }
   }
 
 
@@ -90,13 +117,8 @@ class AccountServiceInterpreter extends AccountService[Account, String, BigDecim
       else account.success
     }
 
-    (validateId(account) |@| validateName(account)){ (_, _) => account }
-  }
-
-  private def existingAccount(no: String)(repository: AccountRepository[String]): \/[Throwable, Account] = {
-    repository.fetch(no) match {
-      case None => -\/(new NoSuchElementException)
-      case Some(account) => \/-(account)
-    }
+    (validateId(account) |@| validateName(account)) { (_, _) => account }
   }
 }
+
+object AccountService extends AccountServiceInterpreter

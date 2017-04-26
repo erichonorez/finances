@@ -1,4 +1,7 @@
-import com.google.inject.AbstractModule
+import com.google.inject.{AbstractModule, TypeLiteral}
+import net.codingwell.scalaguice.ScalaModule
+import org.svomz.apps.finances.core.adapter.secondary.persistence.InMemoryAccountRepository
+import org.svomz.apps.finances.core.domain.model.AccountRepository
 
 /**
  * This class is a Guice module that tells Guice how to bind several
@@ -10,9 +13,11 @@ import com.google.inject.AbstractModule
  * adding `play.modules.enabled` settings to the `application.conf`
  * configuration file.
  */
-class Module extends AbstractModule {
+class Module extends AbstractModule with ScalaModule {
 
   override def configure() = {
+    bind[AccountRepository[String]].toInstance(new InMemoryAccountRepository)
+    bind[Initializer].asEagerSingleton()
   }
 
 }
