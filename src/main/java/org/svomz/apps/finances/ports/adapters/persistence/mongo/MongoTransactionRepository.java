@@ -5,6 +5,7 @@ import static com.mongodb.client.model.Filters.*;
 import com.google.common.base.Preconditions;
 
 import com.mongodb.MongoClient;
+import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 
@@ -22,6 +23,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -128,6 +130,26 @@ public class MongoTransactionRepository implements TransactionRepository {
     List<Transaction> results = new ArrayList<>();
     while (cursor.hasNext()) {
       results.add(this.map(cursor.next()));
+    }
+
+    cursor.close();
+    return results;
+  }
+
+  @Override
+  public Set<Tag> findAllTags(AccountId accountId) {
+    MongoCursor<Document> cursor = this.mongoDatabase.getCollection("transactions")
+      .aggregate(
+        Arrays.asList(
+          new Document("$match", new Document("accountId", accountId.getId())),
+          new Document("$unwind", "$tags"),
+          new Document("$group", new Document("_id", "$tags"))
+        )
+      ).iterator();
+
+    Set<Tag> results = new HashSet<>();
+    while (cursor.hasNext()) {
+      results.add(new Tag((String) cursor.next().values().iterator().next()));
     }
 
     cursor.close();

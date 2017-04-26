@@ -77,4 +77,9 @@ public class InMemoryTransactionRepository implements TransactionRepository {
   public List<Transaction> findAllByTag(AccountId accountId, Tag tag) {
     return null;
   }
+
+  @Override
+  public Set<Tag> findAllTags(AccountId accountId) {
+    return null;
+  }
 }

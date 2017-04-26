@@ -35,6 +35,12 @@
             <version>3.0.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.javaslang</groupId>
+            <artifactId>javaslang</artifactId>
+            <version>2.0.6</version>
+        </dependency>
+
         <!-- WEB -->
 
         <!-- spring boot -->
@@ -115,7 +121,6 @@
             <artifactId>javax.inject</artifactId>
             <version>1</version>
         </dependency>
-
     </dependencies>
 
     <build>

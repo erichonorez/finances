@@ -56,11 +56,14 @@ public class Accounts {
 
   public static Function<TransactionRepository, BigDecimal> balance(Account account) {
     return (TransactionRepository transactionRepository) -> {
-      return transactionRepository.findAllByAccountId(account.getAccountId())
-        .stream()
-        .map((t) -> { return t.value(); })
-        .reduce((v1, v2) -> { return v1.add(v2); })
-        .orElse(BigDecimal.ZERO);
+      return balance(transactionRepository.findAllByAccountId(account.getAccountId()));
     };
+  }
+
+  public static BigDecimal balance(List<Transaction> xs) {
+    return xs.stream()
+      .map((t) -> { return t.value(); })
+      .reduce((v1, v2) -> { return v1.add(v2); })
+      .orElse(BigDecimal.ZERO);
   }
 }
