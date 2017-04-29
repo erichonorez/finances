@@ -26,8 +26,7 @@ import org.svomz.apps.finances.domain.model.Transaction;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Arrays;
-import java.util.Date;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -82,14 +81,19 @@ public class TransactionController {
       return "transaction/new";
     }
 
+    List<String> tags = new ArrayList<>(Arrays.asList(transactionForm.getTags().split(TAG_SEPARATOR_CHAR)));
+
+    tags.removeIf(s -> s.isEmpty());
+    LocalDateTime dateTime = LocalDateTime.ofInstant(transactionForm.getDate().toInstant(), ZoneId.systemDefault());
+
     switch (transactionForm.getType()) {
       case EXPENSE:
         AddExpenseCommandParameters command = new AddExpenseCommandParameters(
           accountId,
           transactionForm.getAmount(),
-          LocalDateTime.ofInstant(transactionForm.getDate().toInstant(), ZoneId.systemDefault()),
+          dateTime,
           transactionForm.getDescription(),
-          Arrays.asList(transactionForm.getTags().split(TAG_SEPARATOR_CHAR))
+          tags
         );
         this.addExpenseCommand.execute(command);
         break;
@@ -97,9 +101,9 @@ public class TransactionController {
         AddIncomeCommandParameters incomeCommand = new AddIncomeCommandParameters(
           accountId,
           transactionForm.getAmount(),
-          LocalDateTime.ofInstant(transactionForm.getDate().toInstant(), ZoneId.systemDefault()),
+          dateTime,
           transactionForm.getDescription(),
-          Arrays.asList(transactionForm.getTags().split(TAG_SEPARATOR_CHAR))
+          tags
         );
         this.addIncomeCommand.execute(incomeCommand);
         break;
@@ -175,13 +179,17 @@ public class TransactionController {
       return "transaction/edit";
     }
 
+    List<String> tags = new ArrayList<>(Arrays.asList(form.getTags().split(TAG_SEPARATOR_CHAR)));
+    tags.removeIf(s -> s.isEmpty());
+    LocalDateTime date = LocalDateTime.ofInstant(form.getDate().toInstant(), ZoneId.systemDefault());
+
     this.editTransactionCommand.execute(
       accountId,
       transactionId,
       BigDecimal.valueOf(form.getAmount()),
-      LocalDateTime.ofInstant(form.getDate().toInstant(), ZoneId.systemDefault()),
+      date,
       form.getDescription(),
-      Arrays.asList(form.getTags().split(TAG_SEPARATOR_CHAR))
+      tags
     );
 
     return "redirect:/accounts/" + accountId;
