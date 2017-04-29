@@ -125,7 +125,9 @@ public class MongoTransactionRepository implements TransactionRepository {
           eq("accountId", accountId.getId()),
           eq("tags", tag.getName())
         )
-      ).iterator();
+      )
+      .sort(descending("date"))
+      .iterator();
 
     List<Transaction> results = new ArrayList<>();
     while (cursor.hasNext()) {
