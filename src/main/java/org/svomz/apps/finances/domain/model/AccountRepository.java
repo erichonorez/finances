@@ -17,4 +17,6 @@ public interface AccountRepository {
   Account create(Account account);
 
   void update(Account account);
+
+  void delete(Account account);
 }

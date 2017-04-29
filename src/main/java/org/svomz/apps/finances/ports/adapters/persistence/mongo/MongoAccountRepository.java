@@ -81,6 +81,12 @@ public class MongoAccountRepository implements AccountRepository {
       .updateOne(eq("accountId", account.getAccountId().getId()), new Document("$set", this.map(account)));
   }
 
+  @Override
+  public void delete(Account account) {
+    this.mongoDatabase.getCollection("accounts")
+      .deleteOne(eq("accountId", account.getAccountId().getId()));
+  }
+
   private Account map(Document next) {
     return new Account(
       new AccountId(next.getString("accountId")),

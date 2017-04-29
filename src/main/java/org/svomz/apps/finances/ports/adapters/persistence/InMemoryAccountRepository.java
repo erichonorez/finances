@@ -32,6 +32,11 @@ public class InMemoryAccountRepository implements AccountRepository {
   }
 
   @Override
+  public void delete(Account account) {
+
+  }
+
+  @Override
   public List<Account> findAll() {
     return Collections.unmodifiableList(this.accounts);
   }

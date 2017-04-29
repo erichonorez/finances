@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.svomz.apps.finances.application.AccountNotFoundException;
+import org.svomz.apps.finances.application.command.DeleteAccountCommand;
 import org.svomz.apps.finances.application.query.GetTransactionCategoriesForAccount;
 import org.svomz.apps.finances.application.command.createaccount.CreateAccountCommand;
 import org.svomz.apps.finances.application.command.updateaccountdescription.UpdateAccountDescriptionCommand;
@@ -37,6 +38,7 @@ public class AccountController {
   private final CreateAccountCommand createAccountCommand;
   private final UpdateAccountDescriptionCommand updateAccountDescriptionCommand;
   private final GetTransactionCategoriesForAccount getTransactionCategoriesForAccount;
+  private final DeleteAccountCommand deleteAccountCommand;
 
   @Inject
   public AccountController(
@@ -45,13 +47,14 @@ public class AccountController {
     final ListTransactionsQuery listTransactionsQuery,
     final CreateAccountCommand createAccountCommand,
     final UpdateAccountDescriptionCommand updateAccountDescriptionCommand,
-    final GetTransactionCategoriesForAccount getTransactionCategoriesForAccount) {
+    final GetTransactionCategoriesForAccount getTransactionCategoriesForAccount, DeleteAccountCommand deleteAccountCommand) {
     this.accountsOverviewQuery = Preconditions.checkNotNull(accountsOverviewQuery);
     this.accountSummaryQuery = Preconditions.checkNotNull(accountSummaryQuery);
     this.listTransactionsQuery = Preconditions.checkNotNull(listTransactionsQuery);
     this.createAccountCommand = Preconditions.checkNotNull(createAccountCommand);
     this.updateAccountDescriptionCommand = Preconditions.checkNotNull(updateAccountDescriptionCommand);
     this.getTransactionCategoriesForAccount = Preconditions.checkNotNull(getTransactionCategoriesForAccount);
+    this.deleteAccountCommand = Preconditions.checkNotNull(deleteAccountCommand);
   }
 
   @RequestMapping({
@@ -110,6 +113,23 @@ public class AccountController {
     this.updateAccountDescriptionCommand.execute(
       new UpdateAccountDescriptionCommandParameters(accountId, form.getDescription()));
     return "redirect:/accounts/" + accountId;
+  }
+
+  @RequestMapping(path = "/accounts/{accountId}/remove", method = RequestMethod.GET)
+  public String remove(@RequestHeader(value = "referer", required = false) final String referer, @PathVariable String accountId, Model model) throws AccountNotFoundException {
+    AccountSummaryView account = this.accountSummaryQuery.execute(accountId);
+    model.addAttribute("accountId", account.getAccountId())
+      .addAttribute("accountName", account.getDescription())
+      .addAttribute("referer", referer);
+
+    return "account/remove";
+  }
+
+  @RequestMapping(path = "/accounts/{accountId}/delete", method = RequestMethod.POST)
+  public String delete(@PathVariable String accountId) throws AccountNotFoundException {
+    this.deleteAccountCommand.execute(accountId);
+
+    return "redirect:/accounts";
   }
 
 }
