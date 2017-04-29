@@ -82,8 +82,8 @@ public class TransactionController {
     }
 
     List<String> tags = new ArrayList<>(Arrays.asList(transactionForm.getTags().split(TAG_SEPARATOR_CHAR)));
-
     tags.removeIf(s -> s.isEmpty());
+
     LocalDateTime dateTime = LocalDateTime.ofInstant(transactionForm.getDate().toInstant(), ZoneId.systemDefault());
 
     switch (transactionForm.getType()) {
