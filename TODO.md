@@ -1,5 +1,6 @@
-GetListOfCategories
---> implémenter les adapteurs mongo et web
+# Compte à vue
+* Donut pour comparer le total des dépenses dans chaque catégorie pour le mois en cours
+* Bar chart pour comparer le total des dépenses et le total des revenus
 
-Balance in a transaction
---> avoir la balance du compte pour chaque transaction
+# Compte d'épargne
+* Bar chart pour comparer les balances dans chaque catégorie
