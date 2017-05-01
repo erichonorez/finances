@@ -1,0 +1,11 @@
+@(accountId: String, transactionId: String, form: Form[models.TransactionFormData], options: Seq[(String, String)], referer: String)(implicit messages: Messages, flash: Flash)
+
+@import views.helpers.AccountHelper._
+
+@main("Edit a transaction") {
+
+    @helper.form(action = controllers.routes.TransactionController.update(accountId, transactionId)) {
+        @transaction.partials.form(form, options, referer)
+    }
+
+}

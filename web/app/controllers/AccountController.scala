@@ -3,99 +3,101 @@ package controllers
 import java.util.UUID
 import javax.inject._
 
-import play.api._
-import play.api.mvc._
-import play.api.data._
-import play.api.data.Forms._
-import play.api.i18n._
 import models._
-import org.svomz.apps.finances.core.domain.model.{Account, AccountRepository}
+import org.svomz.apps.finances.core.application.AccountNotFoundException
+import org.svomz.apps.finances.core.application.interpreter.{AccountApi, ReportingApi, TransactionApi}
+import play.api.data.Forms._
+import play.api.data._
+import play.api.i18n._
+import play.api.mvc._
+import services.PlayApiEnv
 import services.WebUtil._
-import org.svomz.apps.finances.core.domain.model.interpreter.AccountService._
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scalaz.std.scalaFuture._
 
 @Singleton
-class AccountController @Inject()(val accountRepository: AccountRepository[String], val messagesApi: MessagesApi) extends Controller with I18nSupport {
+class AccountController @Inject()(val env: PlayApiEnv, val messagesApi: MessagesApi) extends Controller with I18nSupport {
 
   def index = Action.async { implicit request =>
-    val f: Future[Seq[(Account, BigDecimal)]] = for {
-      accounts <- all(accountRepository)
-      balances <- Future.traverse(accounts)(account => balance(account.no)(accountRepository))
-    } yield accounts zip balances
-
-    f map { xs =>
-      Ok(views.html.account.index(
-        xs map { x =>
-          AccountListItem(x._1.no, x._1.name, x._2)
-        } toList
-      ))
-    } recover { case _ => InternalServerError }
+    AccountApi.fetchAll.run(env) map { accounts =>
+      Ok(views.html.account.index(accounts))
+    }
   }
 
   def show(id: String) = Action.async { implicit request =>
-    fetch(id)(accountRepository) flatMap {
-      case None => Future { NotFound }
-      case Some(account) => {
-        for {
-          ts <- transactions(account.no)(accountRepository)
-          b  <- balance(account.no)(accountRepository)
-        } yield {
-          Ok(views.html.account.show(
-            AccountDetail(
-              account.no,
-              account.name,
-              b,
-              ts map {t => AccountDetailTransaction(t.value, t.descriptionOption getOrElse "", t.date)}
-            )
-          ))
-        }
-      }
-    } recover {case _ => InternalServerError }
+    val sequence = for {
+    account                         <- AccountApi.fetch(id)
+      transactions                  <- TransactionApi.list(account.accountId)
+      balanceByCategory             <- ReportingApi.balanceByCategoy(account.accountId)
+    } yield (account, transactions, balanceByCategory)
+
+    sequence.run(env) map { v => Ok(views.html.account.show(v._1, v._2, v._3)) } recover {
+      case AccountNotFoundException(_) => NotFound
+      case _ => InternalServerError
+    }
   }
 
   def add = Action { implicit request =>
     Ok(views.html.account.add(form, referer))
   }
 
-  def create = Action { implicit request =>
+  def create = Action.async { implicit request =>
     form.bindFromRequest.fold(
       formWithErrors => {
-        BadRequest(views.html.account.add(formWithErrors, formWithErrors.data("referer")))
+        Future { BadRequest(views.html.account.add(formWithErrors, formWithErrors.data("referer"))) }
       },
       formData => {
-
-        Redirect(formData.referer).flashing(
-          "success" -> "Account successfully created"
-        )
+        AccountApi.open(formData.description).run(env) map { accountId =>
+          Redirect(formData.referer).flashing(
+            "success" -> "Account successfully created"
+          )
+        } recover { case _ => InternalServerError }
       }
     )
   }
 
-  def remove(id: String) = Action { implicit request =>
-    Ok(views.html.account.remove(UUID.randomUUID.toString, "A description", referer))
+  def remove(id: String) = Action.async { implicit request =>
+    AccountApi.fetch(id) map { account => {
+      Ok(views.html.account.remove(account.accountId, account.name, referer))
+    } } run env recover {
+      case AccountNotFoundException(_) => NotFound
+      case _ => InternalServerError
+    }
   }
 
-  def delete(id: String) = Action { implicit request =>
-    Redirect(request.body.asFormUrlEncoded.get.get("referer").head.head).flashing(
+  def delete(id: String) = Action.async { implicit request =>
+    AccountApi.close(id) map { _ => Redirect(request.body.asFormUrlEncoded.get.get("referer").head.head).flashing(
       "success" -> "Account successfully deleted"
-    )
+    ) } run env recover {
+      case AccountNotFoundException(_) => NotFound
+      case _ => InternalServerError
+    }
+
   }
 
-  def edit(id: String) = Action { implicit request =>
-    Ok(views.html.account.edit(id, form.fill(AccountFormData("a description", referer)), referer))
+  def edit(id: String) = Action.async { implicit request =>
+    AccountApi.fetch(id) map { account => {
+      Ok(views.html.account.edit(account.accountId, form.fill(AccountFormData(account.name, referer)), referer))
+    } } run env recover {
+      case AccountNotFoundException(_) => NotFound
+      case _ => InternalServerError
+    }
   }
 
-  def update(id: String) = Action { implicit request =>
+  def update(id: String) = Action.async { implicit request =>
     form.bindFromRequest.fold(
       formWithErrors => {
-        BadRequest(views.html.account.edit(id, formWithErrors, formWithErrors.data("referer")))
+        Future { BadRequest(views.html.account.edit(id, formWithErrors, formWithErrors.data("referer"))) }
       },
       formData => {
-        Redirect(formData.referer).flashing(
+        AccountApi.rename(id, formData.description) map { _ => Redirect(formData.referer).flashing(
           "success" -> "Account successfully edited"
-        )
+        ) } run env recover {
+          case AccountNotFoundException(_) => NotFound
+          case _ => InternalServerError
+        }
       }
     )
   }

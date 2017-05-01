@@ -1,0 +1,32 @@
+@(accountId: String, transaction: org.svomz.apps.finances.core.application.TransactionProjection, referer: String)(implicit messages: Messages, flash: Flash) {
+
+    @main("Delete transaction") {
+
+            @helper.form(action = controllers.routes.TransactionController.delete(accountId, transaction.transactionId)) {
+
+                <div class="bg-danger msg-danger">
+                    <p>You are going to delete transaction the following transaction:</p>
+                    <dl>
+                        <dt>Amount:</dt>
+                        <dd>@transaction.amount</dd>
+                        <dt>Date:</dt>
+                        <dd>@transaction.date</dd>
+                        <dt>Description:</dt>
+                        <dd>@transaction.descriptionOption.getOrElse("")</dd>
+                        <dt>Category:</dt>
+                        <dd>@transaction.categoryOption.getOrElse("")</dd>
+                    </dl>
+                    <p>Are you sure?</p>
+                </div>
+
+                <div class="spacer">&nbsp;</div>
+                <div class="form-group">
+                    <input type="hidden" name="referer" value="@referer" />
+
+                    <a class="btn btn-default" href="@referer">Cancel</a>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            }
+    }
+
+}

@@ -1,7 +1,10 @@
-import com.google.inject.{AbstractModule, TypeLiteral}
+import com.google.inject.{AbstractModule, Provides, Singleton, TypeLiteral}
 import net.codingwell.scalaguice.ScalaModule
-import org.svomz.apps.finances.core.adapter.secondary.persistence.InMemoryAccountRepository
-import org.svomz.apps.finances.core.domain.model.AccountRepository
+import org.mongodb.scala.{MongoClient, MongoDatabase}
+import org.svomz.apps.finances.core.domain.model.{AccountRepository, TransactionRepository}
+import org.svomz.apps.finances.core.application.interpreter.ApiEnv
+import services.PlayApiEnv
+import services.port.adapter.secondary.persistence.{MongoAccountRepository, MongoTransactionRepository}
 
 /**
  * This class is a Guice module that tells Guice how to bind several
@@ -16,8 +19,13 @@ import org.svomz.apps.finances.core.domain.model.AccountRepository
 class Module extends AbstractModule with ScalaModule {
 
   override def configure() = {
-    bind[AccountRepository[String]].toInstance(new InMemoryAccountRepository)
-    bind[Initializer].asEagerSingleton()
+    bind[AccountRepository].to[MongoAccountRepository]
+    bind[TransactionRepository].to[MongoTransactionRepository]
+    bind[ApiEnv].to[PlayApiEnv]
   }
 
+  @Provides
+  def get(): MongoDatabase = {
+    MongoClient().getDatabase("finances")
+  }
 }

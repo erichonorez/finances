@@ -4,14 +4,19 @@ GET     /accounts                       controllers.AccountController.index
 GET     /accounts/new                   controllers.AccountController.add
 POST     /accounts/create               controllers.AccountController.create
 GET     /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>             controllers.AccountController.show(id)
-GET     /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/edit        controllers.AccountController.edit(id)
+GET     /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/update      controllers.AccountController.edit(id)
 POST    /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/update      controllers.AccountController.update(id)
-GET     /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/remove      controllers.AccountController.remove(id)
+GET     /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/delete      controllers.AccountController.remove(id)
 POST    /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/delete      controllers.AccountController.delete(id)
 
 # Transactions
 GET     /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/transactions/new        controllers.TransactionController.add(id)
 POST    /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/transactions/create     controllers.TransactionController.create(id)
+GET     /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/transactions/$transactionId<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/update        controllers.TransactionController.edit(id, transactionId)
+POST    /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/transactions/$transactionId<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/update        controllers.TransactionController.update(id, transactionId)
+GET     /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/transactions/$transactionId<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/delete        controllers.TransactionController.remove(id, transactionId)
+POST    /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/transactions/$transactionId<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/delete        controllers.TransactionController.delete(id, transactionId)
+
 GET     /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/transactions/new-bulk        controllers.TransactionController.addBulk(id)
 POST    /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/transactions/create-bulk     controllers.TransactionController.createBulk(id)
 
