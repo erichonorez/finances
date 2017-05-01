@@ -7,7 +7,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scalaz.Kleisli
 
-class ReportingApiInterpreter extends ReportingApi[String, BigDecimal, ApiEnv] with Existing {
+class ReportingApiInterpreter extends ReportingApi[String, String, BigDecimal, ApiEnv] with Existing {
 
   override def balanceByCategoy(accountId: String): Query[List[(String, BigDecimal)]] = {
     Kleisli {
