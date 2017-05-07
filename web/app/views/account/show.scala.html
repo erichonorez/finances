@@ -8,19 +8,6 @@
     <h2><a href="@controllers.routes.AccountController.index">Accounts</a> - <span>@account.name</span> <a href="@controllers.routes.AccountController.edit(account.accountId)"><span class="glyphicon glyphicon-pencil account-edit-btn" aria-hidden="true"></span></a></h2>
     <p><strong>Actual balance:</strong> <span class="@transactionAmountClassOf(account.balance)">@account.balance</span></p>
 
-    @if(!balances.isEmpty) {
-    <div class="panel panel-default">
-        <div class="panel-heading"><h3 class="panel-title">Balance by category</h3></div>
-        <div class="panel-body">
-            <ul>
-                @for(tuple <- balances) {
-                    <li><strong>@tuple._1</strong> : <span class="@transactionAmountClassOf(tuple._2)">@tuple._2</span></li>
-                }
-            </ul>
-        </div>
-    </div>
-    }
-
     <div class="panel panel-default">
         <div class="panel-heading"><h3 class="panel-title">Transactions</h3></div>
             <div class="panel-body">

@@ -43,12 +43,44 @@ class ReactiveMongoTransactionRepository @Inject()(api: ReactiveMongoApi) extend
       .cursor[Transaction].collect[List](1000)
   }
 
-  override def fetchAllWithCategory(accountId: AccountId, category: Category): Future[List[Transaction]] = transactions flatMap {
-    _.find(Json.obj("accountId" -> accountId.value, "tags" -> category.name))
+  override def fetchAllWithCategory(accountId: AccountId, category: Category, from: Option[Date], to: Option[Date]): Future[List[Transaction]] = transactions flatMap {
+    val clause = Json.obj(
+      "accountId" -> accountId.value,
+      "tags" -> category.name
+    )
+
+    val dateClause = if (!from.isEmpty) {
+      if (!to.isEmpty) {
+        Json.obj("date" -> Json.obj("$gte" -> BSONDateTime(from.get.getTime), "$lt" -> BSONDateTime(to.get.getTime)))
+      } else {
+        Json.obj("date" -> Json.obj("$gte" -> BSONDateTime(from.get.getTime)))
+      }
+    } else {
+      if (!to.isEmpty) {
+        Json.obj("date" -> Json.obj("$lt" -> BSONDateTime(to.get.getTime)))
+      } else {
+        Json.obj()
+      }
+    }
+
+    _.find(clause ++ dateClause)
       .sort(Json.obj("date" -> -1))
       .cursor[Transaction].collect[List](1000)
   }
 
+  /**
+    * {{{
+      db.getCollection('transactions').aggregate([
+          {$unwind: "$tags"},
+          {$group: {
+              _id: "$tags",
+              category: { $addToSet: "$tags" }
+          }}
+      ])
+    * }}}
+    * @param accountId
+    * @return
+    */
   override def fetchAllCategories(accountId: AccountId): Future[List[Category]] = {
     val collection = api.db.collection[BSONCollection]("transactions")
     import collection.BatchCommands.AggregationFramework._
@@ -110,7 +142,7 @@ class ReactiveMongoTransactionRepository @Inject()(api: ReactiveMongoApi) extend
         accountId,
         transactionId,
         amount.abs,
-        new Date(),
+        date,
         description,
         tags.headOption
       )
@@ -119,7 +151,7 @@ class ReactiveMongoTransactionRepository @Inject()(api: ReactiveMongoApi) extend
         accountId,
         transactionId,
         amount.abs,
-        new Date(),
+        date,
         description,
         tags.headOption
       )

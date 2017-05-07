@@ -4,7 +4,7 @@
  * two arguments, a `String` for the title of the page and an `Html`
  * object to insert into the body of the page.
  *@
-@(title: String)(content: Html)(implicit flash: Flash)
+@(title: String, scripts: Html = Html(""))(content: Html)(implicit flash: Flash)
 
 <!DOCTYPE html>
 <html lang="en">
@@ -21,11 +21,6 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
               integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
-        <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
-                integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc=" crossorigin="anonymous"></script>
-
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     </head>
     <body>
         <nav class="navbar navbar-default navbar-static-top">
@@ -47,5 +42,7 @@
 
             @content
         </div>
+
+        @scripts
     </body>
 </html>

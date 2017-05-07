@@ -47,7 +47,7 @@ class MongoTransactionRepository @Inject()(db: MongoDatabase) extends Transactio
     }
   }
 
-  override def fetchAllWithCategory(accountId: AccountId, category: Category): Future[List[Transaction]] = {
+  override def fetchAllWithCategory(accountId: AccountId, category: Category, from: Option[Date], to: Option[Date]): Future[List[Transaction]] = {
     collection.find(and(equal("accountId", accountId.value), equal("tags", category.name)))
       .sort(descending("date"))
       .toFuture() map { s =>

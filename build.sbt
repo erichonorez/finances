@@ -37,6 +37,7 @@ lazy val web = project
         ws,
         "net.codingwell" %% "scala-guice" % "4.1.0",
         "org.mongodb.scala" %% "mongo-scala-driver" % "1.0.1",
+        "org.reactivemongo" %% "play2-reactivemongo" % "0.12.2",
         "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test
       )
     )

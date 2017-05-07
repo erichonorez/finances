@@ -1,6 +1,7 @@
 package controllers
 
-import java.util.UUID
+import java.time.{LocalDate, ZoneId}
+import java.util.Date
 import javax.inject._
 
 import models._
@@ -30,7 +31,7 @@ class AccountController @Inject()(val env: PlayApiEnv, val messagesApi: Messages
     val sequence = for {
     account                         <- AccountApi.fetch(id)
       transactions                  <- TransactionApi.list(account.accountId)
-      balanceByCategory             <- ReportingApi.balanceByCategoy(account.accountId)
+      balanceByCategory             <- ReportingApi.balanceByCategory(account.accountId, Some(Date.from(LocalDate.now().withDayOfMonth(1).atStartOfDay(ZoneId.systemDefault()).toInstant)), None)
     } yield (account, transactions, balanceByCategory)
 
     sequence.run(env) map { v => Ok(views.html.account.show(v._1, v._2, v._3)) } recover {
