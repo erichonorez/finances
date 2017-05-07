@@ -1,10 +1,12 @@
-import com.google.inject.{AbstractModule, Provides, Singleton, TypeLiteral}
+import com.google.inject.{AbstractModule, Provides, Singleton}
+import com.typesafe.config.ConfigFactory
 import net.codingwell.scalaguice.ScalaModule
 import org.mongodb.scala.{MongoClient, MongoDatabase}
 import org.svomz.apps.finances.core.domain.model.{AccountRepository, TransactionRepository}
 import org.svomz.apps.finances.core.application.interpreter.ApiEnv
 import services.PlayApiEnv
-import services.port.adapter.secondary.persistence.{MongoAccountRepository, MongoTransactionRepository}
+import services.port.adapter.secondary.persistence.mongo.{MongoAccountRepository, MongoTransactionRepository}
+import services.port.adapter.secondary.persistence.reactivemongo.{ReactiveMongoAccountRepository, ReactiveMongoTransactionRepository}
 
 /**
  * This class is a Guice module that tells Guice how to bind several
@@ -19,13 +21,9 @@ import services.port.adapter.secondary.persistence.{MongoAccountRepository, Mong
 class Module extends AbstractModule with ScalaModule {
 
   override def configure() = {
-    bind[AccountRepository].to[MongoAccountRepository]
-    bind[TransactionRepository].to[MongoTransactionRepository]
+    bind[AccountRepository].to[ReactiveMongoAccountRepository]
+    bind[TransactionRepository].to[ReactiveMongoTransactionRepository]
     bind[ApiEnv].to[PlayApiEnv]
   }
 
-  @Provides
-  def get(): MongoDatabase = {
-    MongoClient().getDatabase("finances")
-  }
 }

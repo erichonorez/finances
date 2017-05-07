@@ -1,4 +1,4 @@
-package services.port.adapter.secondary.persistence
+package services.port.adapter.secondary.persistence.mongo
 
 import java.util.{Date, UUID}
 
@@ -6,9 +6,9 @@ import com.google.inject.Inject
 import org.joda.time.DateTime
 import org.mongodb.scala.MongoDatabase
 import org.mongodb.scala.bson.collection.immutable.Document
+import org.mongodb.scala.model.Aggregates._
 import org.mongodb.scala.model.Filters._
 import org.mongodb.scala.model.Sorts.descending
-import org.mongodb.scala.model.Aggregates._
 import org.svomz.apps.finances.core.domain.model._
 
 import scala.concurrent.ExecutionContext.Implicits.global

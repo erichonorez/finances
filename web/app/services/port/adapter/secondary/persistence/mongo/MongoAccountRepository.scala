@@ -1,4 +1,4 @@
-package services.port.adapter.secondary.persistence
+package services.port.adapter.secondary.persistence.mongo
 
 import java.util.UUID
 
