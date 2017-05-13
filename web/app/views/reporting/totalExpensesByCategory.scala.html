@@ -1,0 +1,144 @@
+@(accountId: String, balances: List[(String, BigDecimal, Double)], period: org.svomz.apps.finances.core.application.interpreter.TimePeriod)(implicit flash: Flash)
+
+@import java.util.Date
+@import models.TimePeriodMapper
+
+@scripts = {
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
+<script type="text/javascript">
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF'.split('');
+            var color = '#';
+            for (var i = 0; i < 6; i++ ) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        Chart.defaults.global.elements.rectangle.backgroundColor = 'rgba(66,139,202, 0.7)'
+
+        var values = [
+            @for(tuple <- balances) {
+                @tuple._3 ,
+            }
+        ];
+        var labels = [
+            @for(tuple <- balances) {
+                '@tuple._1',
+            }
+        ];
+
+        var amounts = [
+            @for(tuple <- balances) {
+                '@tuple._2',
+            }
+        ];
+
+        var colors = labels.map(function(l) {
+            return getRandomColor();
+        });
+
+        var data = {
+            labels: labels,
+            datasets: [{
+                data: values,
+                backgroundColor: colors
+            }]
+        }
+
+        var options = {
+            responsive: true,
+            title: {
+                display: false
+            },
+            legendCallback: function (chart) {
+                var text = [];
+                text.push('<ul class="' + chart.id + '-legend">');
+
+                var data = chart.data;
+                var datasets = data.datasets;
+                var labels = data.labels;
+
+                if (datasets.length) {
+                    for (var i = 0; i < datasets[0].data.length; ++i) {
+                        text.push('<li><span class="label" style="width: 20px; background-color:' + datasets[0].backgroundColor[i] + '"> </span> ');
+                        if (labels[i]) {
+                            text.push(labels[i] + ': ' + amounts[i]);
+                        }
+                        text.push('</li>');
+                    }
+                }
+                text.push('</ul>');
+                return text.join('');
+            },
+            tooltips: {
+                callbacks: {
+                    label: function (tooltipItem, data) {
+                        return data.labels[tooltipItem.index] + ' (' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] + '%)';
+                    }
+                }
+            },
+            legend: {
+                display: false,
+            },
+        };
+
+        var ctx = document.getElementById("chart");
+
+        var chart = new Chart(ctx, {
+            type: 'pie',
+            data: data,
+            options
+        });
+
+    </script>
+
+}
+
+@import views.helpers.AccountHelper._
+
+@main("Total debit by category", scripts) {
+
+@if(!balances.isEmpty) {
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Total debit by category</h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-sm-6"><canvas id="chart"></canvas></div>
+            <div class="col-sm-6">
+                <div class="dropdown pull-right">
+                    <button class="btn btn-default dropdown-toggle pull-right" type="button" id="dropdownMenu1" data-toggle="dropdown"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> @TimePeriodMapper.toLabel(period) <span class="caret"></span></button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li><a href="@controllers.routes.ReportingController.totalDebitsByCategory(accountId, Some("this-month"))">This month</a></li>
+                        <li><a href="@controllers.routes.ReportingController.totalDebitsByCategory(accountId, Some("last-month"))">Last month</a></li>
+                        <li><a href="@controllers.routes.ReportingController.totalDebitsByCategory(accountId, Some("last-three-months"))">Last 3 months</a></li>
+                        <li><a href="@controllers.routes.ReportingController.totalDebitsByCategory(accountId, Some("this-year"))">This year</a></li>
+                        <li><a href="@controllers.routes.ReportingController.totalDebitsByCategory(accountId, Some("last-year"))">Last year</a></li>
+                    </ul>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Total debit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @for(tuple <- balances) {
+                        <tr>
+                            <td>@tuple._1</td>
+                            <td>@tuple._2</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+}

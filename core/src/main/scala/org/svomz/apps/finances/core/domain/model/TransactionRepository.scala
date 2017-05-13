@@ -1,5 +1,7 @@
 package org.svomz.apps.finances.core.domain.model
 
+import java.util.Date
+
 import scala.concurrent.Future
 
 trait TransactionRepository {
@@ -16,8 +18,11 @@ trait TransactionRepository {
 
   def fetchAll(accountId: AccountId): Future[List[Transaction]]
 
-  def fetchAllWithCategory(accountId: AccountId, category: Category): Future[List[Transaction]]
+  def fetchAllWithCategory(accountId: AccountId, category: Category, from: Option[Date], to: Option[Date]): Future[List[Transaction]]
 
   def fetchAllCategories(accountId: AccountId):  Future[List[Category]]
+
+  def fetchAllDebitWithCategory(id: AccountId, c: Category, from: Option[Date], to: Option[Date]): Future[List[Transaction]]
+
 
 }

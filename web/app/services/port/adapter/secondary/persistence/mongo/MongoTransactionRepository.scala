@@ -113,4 +113,6 @@ class MongoTransactionRepository @Inject()(db: MongoDatabase) extends Transactio
       )
     }
   }
+
+  override def fetchAllDebitWithCategory(id: AccountId, c: Category, from: Option[Date], to: Option[Date]): Future[List[Transaction]] = ???
 }

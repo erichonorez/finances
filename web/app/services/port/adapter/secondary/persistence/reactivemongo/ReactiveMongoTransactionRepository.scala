@@ -96,6 +96,22 @@ class ReactiveMongoTransactionRepository @Inject()(api: ReactiveMongoApi) extend
     } } withFilter(!_.isEmpty) map(catO => Category(catO.get)))
   }
 
+  override def fetchAllDebitWithCategory(id: AccountId, c: Category, from: Option[Date], to: Option[Date]): Future[List[Transaction]] = {
+    transactions flatMap {
+      _.find(
+        Json.obj(
+          "accountId" -> id.value,
+          "amount" -> Json.obj(
+            "$lt" -> 0
+          ),
+          "tags" -> c.name
+        )
+      ).sort(Json.obj("date" -> -1))
+       .cursor[Transaction].collect[List](1000)
+    }
+  }
+
+
   private def transactionWithId(accountId: AccountId, transactionId: TransactionId) = Json.obj(
     "accountId" -> accountId.value,
     "transactionId" -> transactionId.value

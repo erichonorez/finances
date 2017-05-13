@@ -21,7 +21,9 @@ GET     /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{1
 POST    /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/transactions/create-bulk     controllers.TransactionController.createBulk(id)
 
 
-GET     /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/reportings/balances-by-category             controllers.ReportingController.balancesByCategory(id, from: Option[String], to: Option[String])
+GET     /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/reportings/balances-by-category             controllers.ReportingController.balancesByCategory(id, period: Option[String])
+GET     /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/reportings/total-debits-by-category         controllers.ReportingController.totalDebitsByCategory(id, period: Option[String])
+
 
 
 # Map static resources from the /public folder to the /assets URL path

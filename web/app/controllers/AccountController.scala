@@ -6,7 +6,7 @@ import javax.inject._
 
 import models._
 import org.svomz.apps.finances.core.application.AccountNotFoundException
-import org.svomz.apps.finances.core.application.interpreter.{AccountApi, ReportingApi, TransactionApi}
+import org.svomz.apps.finances.core.application.interpreter.{AccountApi, ReportingApi, ThisMonth, TransactionApi}
 import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n._
@@ -31,7 +31,7 @@ class AccountController @Inject()(val env: PlayApiEnv, val messagesApi: Messages
     val sequence = for {
     account                         <- AccountApi.fetch(id)
       transactions                  <- TransactionApi.list(account.accountId)
-      balanceByCategory             <- ReportingApi.balanceByCategory(account.accountId, Some(Date.from(LocalDate.now().withDayOfMonth(1).atStartOfDay(ZoneId.systemDefault()).toInstant)), None)
+      balanceByCategory             <- ReportingApi.balanceByCategory(account.accountId, ThisMonth)
     } yield (account, transactions, balanceByCategory)
 
     sequence.run(env) map { v => Ok(views.html.account.show(v._1, v._2, v._3)) } recover {
