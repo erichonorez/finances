@@ -14,6 +14,8 @@ import org.svomz.apps.finances.core.domain.model._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
+import play.api.Logger
+
 class MongoTransactionRepository @Inject()(db: MongoDatabase) extends TransactionRepository {
 
   private val collection = db.getCollection("transactions")
@@ -115,4 +117,8 @@ class MongoTransactionRepository @Inject()(db: MongoDatabase) extends Transactio
   }
 
   override def fetchAllDebitWithCategory(id: AccountId, c: Category, from: Option[Date], to: Option[Date]): Future[List[Transaction]] = ???
+
+  override def fetchAllDebits(id: AccountId, from: Some[Date], to: Some[Date]): Future[List[Transaction]] = ???
+
+  override def fetchAllCredits(id: AccountId, from: Some[Date], to: Some[Date]): Future[List[Transaction]] = ???
 }

@@ -38,4 +38,15 @@ class ReportingController @Inject()(val env: PlayApiEnv, val messagesApi: Messag
     }
   }
 
+  def totalDebits(accountId: String, periodO: Option[String]) = Action.async { implicit request =>
+    val period = periodO match {
+      case None => ThisMonth
+      case Some(s) => TimePeriodMapper.fromString(s)
+    }
+
+    ReportingApi.totalDebit(accountId, period) run env map { amount =>
+      Ok(views.html.reporting.totalDebits(accountId, amount, period))
+    }
+  }
+
 }

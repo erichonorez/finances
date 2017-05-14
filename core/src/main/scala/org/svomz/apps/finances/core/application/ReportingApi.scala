@@ -1,9 +1,5 @@
 package org.svomz.apps.finances.core.application
 
-import java.util.Date
-
-import org.svomz.apps.finances.core.domain.model.Category
-
 trait ReportingApi[AccountId, Category, Amount, TimePeriod, Env] extends CommonApi[Env] {
 
   /**
@@ -21,5 +17,23 @@ trait ReportingApi[AccountId, Category, Amount, TimePeriod, Env] extends CommonA
     * @return
     */
   def totalExpensesByCategory(accountId: AccountId, period: TimePeriod): Query[List[(Category, Amount, Double)]]
+
+  /**
+    * Computes the total of debit over a period of time.
+    *
+    * @param accountId
+    * @param period
+    * @return
+    */
+  def totalDebit(accountId: AccountId, period: TimePeriod): Query[Amount]
+
+  /**
+    * Computes the total of debit over a period of time.
+    *
+    * @param accountId
+    * @param period
+    * @return
+    */
+  def totalCredit(accountId: AccountId, period: TimePeriod): Query[Amount]
 
 }

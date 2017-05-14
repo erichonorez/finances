@@ -23,6 +23,8 @@ POST    /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{1
 
 GET     /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/reportings/balances-by-category             controllers.ReportingController.balancesByCategory(id, period: Option[String])
 GET     /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/reportings/total-debits-by-category         controllers.ReportingController.totalDebitsByCategory(id, period: Option[String])
+GET     /accounts/$id<[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}>/reportings/total-debits                     controllers.ReportingController.totalDebits(id, period: Option[String])
+
 
 
 

@@ -18,6 +18,10 @@ trait TransactionRepository {
 
   def fetchAll(accountId: AccountId): Future[List[Transaction]]
 
+  def fetchAllDebits(id: AccountId, from: Some[Date], to: Some[Date]): Future[List[Transaction]]
+
+  def fetchAllCredits(id: AccountId, from: Some[Date], to: Some[Date]): Future[List[Transaction]]
+
   def fetchAllWithCategory(accountId: AccountId, category: Category, from: Option[Date], to: Option[Date]): Future[List[Transaction]]
 
   def fetchAllCategories(accountId: AccountId):  Future[List[Category]]

@@ -61,6 +61,48 @@ class ReportingApiInterpreter extends ReportingApi[String, String, BigDecimal, T
       }
     }
   }
+
+  /**
+    * Computes the total of debit over a period of time.
+    *
+    * @param accountId
+    * @param period
+    * @return
+    */
+  override def totalDebit(accountId: String, period: TimePeriod): Query[BigDecimal] = {
+    Kleisli {
+      env => {
+        withExistingAccount(accountId)(account => {
+          val from = Some(Date.from(period.from.atStartOfDay(ZoneId.systemDefault()).toInstant()))
+          val to = Some(Date.from(period.to.atStartOfDay(ZoneId.systemDefault()).toInstant()))
+          env.transactionRepository.fetchAllDebits(account.id, from, to) map { ts =>
+            ts.foldLeft(BigDecimal(0))((v, t) => t.apply(v)).abs
+          }
+        })(env)
+      }
+    }
+  }
+
+  /**
+    * Computes the total of debit over a period of time.
+    *
+    * @param accountId
+    * @param period
+    * @return
+    */
+  override def totalCredit(accountId: String, period: TimePeriod): Query[BigDecimal] = {
+    Kleisli {
+      env => {
+        withExistingAccount(accountId)(account => {
+          val from = Some(Date.from(period.from.atStartOfDay(ZoneId.systemDefault()).toInstant()))
+          val to = Some(Date.from(period.to.atStartOfDay(ZoneId.systemDefault()).toInstant()))
+          env.transactionRepository.fetchAllCredits(account.id, from, to) map { ts =>
+            ts.foldLeft(BigDecimal(0))((v, t) => t.apply(v)).abs
+          }
+        })(env)
+      }
+    }
+  }
 }
 
 sealed trait TimePeriod {

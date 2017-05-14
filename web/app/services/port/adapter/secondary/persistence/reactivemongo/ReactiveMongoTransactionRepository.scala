@@ -4,6 +4,7 @@ import java.util.{Date, UUID}
 
 import com.google.inject.Inject
 import org.svomz.apps.finances.core.domain.model._
+import play.api.Logger
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import play.modules.reactivemongo.ReactiveMongoApi
@@ -43,6 +44,60 @@ class ReactiveMongoTransactionRepository @Inject()(api: ReactiveMongoApi) extend
       .cursor[Transaction].collect[List](1000)
   }
 
+  override def fetchAllDebits(id: AccountId, from: Some[Date], to: Some[Date]): Future[List[Transaction]] = transactions flatMap {
+    val clause = Json.obj(
+      "accountId" -> id.value,
+      "amount" -> Json.obj(
+        "$lt" -> 0
+      )
+    )
+
+    val dateClause = if (!from.isEmpty) {
+      if (!to.isEmpty) {
+        Json.obj("date" -> Json.obj("$gte" -> BSONDateTime(from.get.getTime), "$lt" -> BSONDateTime(to.get.getTime)))
+      } else {
+        Json.obj("date" -> Json.obj("$gte" -> BSONDateTime(from.get.getTime)))
+      }
+    } else {
+      if (!to.isEmpty) {
+        Json.obj("date" -> Json.obj("$lt" -> BSONDateTime(to.get.getTime)))
+      } else {
+        Json.obj()
+      }
+    }
+
+    _.find(clause ++ dateClause)
+      .sort(Json.obj("date" -> -1))
+      .cursor[Transaction].collect[List](1000)
+  }
+
+  override def fetchAllCredits(id: AccountId, from: Some[Date], to: Some[Date]): Future[List[Transaction]] = transactions flatMap {
+    val clause = Json.obj(
+      "accountId" -> id.value,
+      "amount" -> Json.obj(
+        "$gt" -> 0
+      )
+    )
+
+    val dateClause = if (!from.isEmpty) {
+      if (!to.isEmpty) {
+        Json.obj("date" -> Json.obj("$gte" -> BSONDateTime(from.get.getTime), "$lt" -> BSONDateTime(to.get.getTime)))
+      } else {
+        Json.obj("date" -> Json.obj("$gte" -> BSONDateTime(from.get.getTime)))
+      }
+    } else {
+      if (!to.isEmpty) {
+        Json.obj("date" -> Json.obj("$lt" -> BSONDateTime(to.get.getTime)))
+      } else {
+        Json.obj()
+      }
+    }
+
+    _.find(clause ++ dateClause)
+      .sort(Json.obj("date" -> -1))
+      .cursor[Transaction].collect[List](1000)
+  }
+
   override def fetchAllWithCategory(accountId: AccountId, category: Category, from: Option[Date], to: Option[Date]): Future[List[Transaction]] = transactions flatMap {
     val clause = Json.obj(
       "accountId" -> accountId.value,
@@ -62,6 +117,8 @@ class ReactiveMongoTransactionRepository @Inject()(api: ReactiveMongoApi) extend
         Json.obj()
       }
     }
+
+    Logger.info((clause ++ dateClause).toString())
 
     _.find(clause ++ dateClause)
       .sort(Json.obj("date" -> -1))
@@ -97,15 +154,36 @@ class ReactiveMongoTransactionRepository @Inject()(api: ReactiveMongoApi) extend
   }
 
   override def fetchAllDebitWithCategory(id: AccountId, c: Category, from: Option[Date], to: Option[Date]): Future[List[Transaction]] = {
+    val clause = Json.obj(
+      "accountId" -> id.value,
+      "amount" -> Json.obj(
+        "$lt" -> 0
+      ),
+      "tags" -> c.name
+    )
+
+    //         Json.obj("date" -> Json.obj("$gte" -> BSONDateTime(DateTime.parse("20170401", DateTimeFormat.forPattern("yyyyMMdd")).getMillis), "$lt" -> BSONDateTime(DateTime.parse("20170501", DateTimeFormat.forPattern("yyyyMMdd")).getMillis)))
+
+
+    val dateClause = if (!from.isEmpty) {
+      if (!to.isEmpty) {
+        Json.obj("date" -> Json.obj("$gte" -> BSONDateTime(from.get.getTime), "$lt" -> BSONDateTime(to.get.getTime)))
+      } else {
+        Json.obj("date" -> Json.obj("$gte" -> BSONDateTime(from.get.getTime)))
+      }
+    } else {
+      if (!to.isEmpty) {
+        Json.obj("date" -> Json.obj("$lt" -> BSONDateTime(to.get.getTime)))
+      } else {
+        Json.obj()
+      }
+    }
+
+    Logger.info((clause ++ dateClause).toString())
+
     transactions flatMap {
       _.find(
-        Json.obj(
-          "accountId" -> id.value,
-          "amount" -> Json.obj(
-            "$lt" -> 0
-          ),
-          "tags" -> c.name
-        )
+        clause ++ dateClause
       ).sort(Json.obj("date" -> -1))
        .cursor[Transaction].collect[List](1000)
     }

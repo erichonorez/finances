@@ -1,0 +1,34 @@
+@(accountId: String, amount: BigDecimal, period: org.svomz.apps.finances.core.application.interpreter.TimePeriod)(implicit flash: Flash)
+
+@import java.util.Date
+@import models.TimePeriodMapper
+@import views.helpers.AccountHelper._
+
+@main("Total debit") {
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Total debit</h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-sm-6"><canvas id="chart"></canvas></div>
+            <div class="col-sm-6">
+                <div class="dropdown pull-right">
+                    <button class="btn btn-default dropdown-toggle pull-right" type="button" id="dropdownMenu1" data-toggle="dropdown"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> @TimePeriodMapper.toLabel(period) <span class="caret"></span></button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li><a href="@controllers.routes.ReportingController.totalDebits(accountId, Some("this-month"))">This month</a></li>
+                        <li><a href="@controllers.routes.ReportingController.totalDebits(accountId, Some("last-month"))">Last month</a></li>
+                        <li><a href="@controllers.routes.ReportingController.totalDebits(accountId, Some("last-three-months"))">Last 3 months</a></li>
+                        <li><a href="@controllers.routes.ReportingController.totalDebits(accountId, Some("this-year"))">This year</a></li>
+                        <li><a href="@controllers.routes.ReportingController.totalDebits(accountId, Some("last-year"))">Last year</a></li>
+                    </ul>
+                </div>
+                @amount
+            </div>
+        </div>
+    </div>
+</div>
+
+
+}
