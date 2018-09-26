@@ -19,7 +19,7 @@ class ReactiveMongoAccountRepository @Inject()(api: ReactiveMongoApi) extends Ac
   private val accounts = api.database.map(_.collection[JSONCollection]("accounts"))
 
   override def update(account: Account): Future[Account] = accounts.flatMap {
-    _.update(accountWithId(account.id), BSONDocument("description" -> account.name)) map { _ => account}
+    _.update(accountWithId(account.id), account) map { _ => account}
   }
 
   override def delete(account: Account): Future[Account] = accounts.flatMap {

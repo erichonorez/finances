@@ -208,8 +208,8 @@ class ReactiveMongoTransactionRepository @Inject()(api: ReactiveMongoApi) extend
       Json.obj(
         "accountId" -> t.accountId.value,
         "transactionId" -> t.id.value,
-        "amount" -> t.amount.toDouble,
-        "date" -> t.date,
+        "amount" -> t.value.toDouble,
+        "date" ->  BSONDateTime(t.date.getTime),
         "description" -> JsString(t.descriptionOption.getOrElse("")),
         "tags" -> tags
       )

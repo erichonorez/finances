@@ -1,7 +1,5 @@
 package controllers
 
-import java.time.{LocalDate, ZoneId}
-import java.util.Date
 import javax.inject._
 
 import models._
@@ -31,10 +29,11 @@ class AccountController @Inject()(val env: PlayApiEnv, val messagesApi: Messages
     val sequence = for {
     account                         <- AccountApi.fetch(id)
       transactions                  <- TransactionApi.list(account.accountId)
-      balanceByCategory             <- ReportingApi.balanceByCategory(account.accountId, ThisMonth)
-    } yield (account, transactions, balanceByCategory)
+      totalExpenses                 <- ReportingApi.totalDebit(id, ThisMonth)
+      totalIncomes                  <- ReportingApi.totalCredit(id, ThisMonth)
+    } yield (account, transactions, totalExpenses, totalIncomes)
 
-    sequence.run(env) map { v => Ok(views.html.account.show(v._1, v._2, v._3)) } recover {
+    sequence.run(env) map { v => Ok(views.html.account.show(v._1, v._2, v._3, v._4)) } recover {
       case AccountNotFoundException(_) => NotFound
       case _ => InternalServerError
     }

@@ -1,12 +1,25 @@
 @(account: org.svomz.apps.finances.core.application.AccountProjection,
     transactions: List[org.svomz.apps.finances.core.application.TransactionListItemProjection],
-    balances: List[(String, BigDecimal)])(implicit flash: Flash)
+    totalExpenses: BigDecimal,
+    totalIncomes: BigDecimal)(implicit flash: Flash)
 
 @import views.helpers.AccountHelper._
 
 @main("show") {
     <h2><a href="@controllers.routes.AccountController.index">Accounts</a> - <span>@account.name</span> <a href="@controllers.routes.AccountController.edit(account.accountId)"><span class="glyphicon glyphicon-pencil account-edit-btn" aria-hidden="true"></span></a></h2>
-    <p><strong>Actual balance:</strong> <span class="@transactionAmountClassOf(account.balance)">@account.balance</span></p>
+
+    <div class="row">
+        <div class="col-sm-4">
+            <p><strong>Actual balance:</strong> <span class="@transactionAmountClassOf(account.balance)">@account.balance</span></p>
+        </div>
+        <div class="col-sm-4">
+            <p><strong>Total expenses this month:</strong> <span class="@transactionAmountClassOf(account.balance)">@totalExpenses</span></p>
+        </div>
+        <div class="col-sm-4">
+            <p><strong>Total incomes this month:</strong> <span class="@transactionAmountClassOf(account.balance)">@totalIncomes</span></p>
+        </div>
+    </div>
+
 
     <div class="panel panel-default">
         <div class="panel-heading"><h3 class="panel-title">Transactions</h3></div>
